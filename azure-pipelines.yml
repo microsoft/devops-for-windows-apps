@@ -38,6 +38,15 @@ steps:
 - script: nbgv cloud
   displayName: Set Version
 
+- powershell: |
+    # Get the version version    
+    $ver = .\nbgv get-version -f json | ConvertFrom-Json
+    
+    # Update appxmanifest. This must be done before build.
+    $doc = Get-Content ".\WpfCoreApp.Package\Package.appxmanifest"    
+    $doc | % { $_.Replace("1.0.0", "$($ver.CloudBuildVersionVars.GitBuildVersionSimple)") } | Set-Content ".\WpfCoreApp.Package\Package.appxmanifest"    
+  displayName: Update manifest version
+
 - task: MSBuild@1
   displayName: Build for $(BuildConfiguration)
   inputs:
