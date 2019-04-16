@@ -32,5 +32,3 @@ steps:
 
 - script: nbgv cloud
   displayName: Set Version
-
-
