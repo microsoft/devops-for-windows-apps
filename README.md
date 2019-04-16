@@ -1,4 +1,6 @@
 
+Installer page here: https://build2019devopsdemo.z13.web.core.windows.net/WpfCoreApp
+
 # Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
