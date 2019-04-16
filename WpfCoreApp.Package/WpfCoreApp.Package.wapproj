@@ -57,10 +57,34 @@
     <PackageCertificateKeyFile>WpfCoreApp_TestKey.pfx</PackageCertificateKeyFile>
     <PackageCertificateThumbprint>AFF8D6BDECE343C554EFA9CA1258AEE2BB8BAF1D</PackageCertificateThumbprint>
     <EntryPointProjectUniqueName>..\WpfCoreApp\WpfCoreApp.csproj</EntryPointProjectUniqueName>
+
+    <!-- True/false. Sign the output packages. Default is true. -->    
+    <!--<AppxPackageSigningEnabled>true</AppxPackageSigningEnabled>-->
+    
+    <!-- Values: StoreUpload, CI, SideLoadOnly. Default is StoreUpload.
+         StoreUpload = appxupload + sideload
+         CI = appxupload
+         SideLoadOnly = sideload
+    -->
+    <!--<UapAppxPackageBuildMode>CI</UapAppxPackageBuildMode>-->
+
+
+    <!-- Ouput folder for packages. Default is AppPackages -->
+    <!--<AppxPackageDir>AppPackages</AppxPackageDir>-->
+    
+    <!-- Generate .appinstaller and HTML -->
     <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
+
+    <!-- Generate architecture specific packages. Values: x86|x64|arm|arm64 -->
     <AppxBundlePlatforms>x86</AppxBundlePlatforms>
+
+    <!-- App installer file base url -->
     <AppInstallerUri>https://build2019devopsdemo.z13.web.core.windows.net/WpfCoreApp</AppInstallerUri>
+
+    <!-- Update frequency -->
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
+
+    <!-- TODO: values for this -->
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
     <AppxBundle>Always</AppxBundle>
   </PropertyGroup> 
