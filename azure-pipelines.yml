@@ -24,6 +24,10 @@ variables:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   
 steps:
+- task: DotNetCoreInstaller@0
+  inputs:
+    version: '3.0.100-preview5-011323'
+
 - task: DotNetCoreCLI@2  
   inputs:
     command: custom
@@ -33,10 +37,6 @@ steps:
 
 - script: nbgv cloud
   displayName: Set Version
-
-- task: DotNetCoreInstaller@0
-  inputs:
-    version: '3.0.100-preview5-011323'
 
 - task: MSBuild@1
   displayName: Build for $(BuildConfiguration)
