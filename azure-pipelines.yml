@@ -32,3 +32,15 @@ steps:
 
 - script: nbgv cloud
   displayName: Set Version
+
+- task: DotNetCoreInstaller@0
+  inputs:
+    version: '3.0.100-preview5-011323'
+
+- task: MSBuild@1
+  displayName: Build for $(BuildConfiguration)
+  inputs:
+    solution: WpfCoreApp.sln
+    msbuildArguments: /restore
+    configuration: $(BuildConfiguration)
+    maximumCpuCount: true
