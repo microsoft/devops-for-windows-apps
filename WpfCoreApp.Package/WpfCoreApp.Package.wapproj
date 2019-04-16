@@ -57,7 +57,13 @@
     <PackageCertificateKeyFile>WpfCoreApp_TestKey.pfx</PackageCertificateKeyFile>
     <PackageCertificateThumbprint>AFF8D6BDECE343C554EFA9CA1258AEE2BB8BAF1D</PackageCertificateThumbprint>
     <EntryPointProjectUniqueName>..\WpfCoreApp\WpfCoreApp.csproj</EntryPointProjectUniqueName>
-  </PropertyGroup>
+    <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
+    <AppxBundlePlatforms>x86</AppxBundlePlatforms>
+    <AppInstallerUri>https://some.location.tbd.local/endpoint</AppInstallerUri>
+    <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
+    <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
+    <AppxBundle>Always</AppxBundle>
+  </PropertyGroup> 
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
