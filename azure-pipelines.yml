@@ -45,3 +45,8 @@ steps:
     msbuildArguments: /restore
     configuration: $(BuildConfiguration)
     maximumCpuCount: true
+
+- task: PublishPipelineArtifact@0
+  inputs:
+    artifactName: Package
+    targetPath: WpfCoreApp.Package/AppPackages/WpfCoreApp.Package_*/
