@@ -75,7 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WpfCoreApp\WpfCoreApp.csproj">
-      <DesktopBridgeSelfContained>False</DesktopBridgeSelfContained>
+      <DesktopBridgeSelfContained>true</DesktopBridgeSelfContained>
       <DesktopBridgeIdentifier>
       </DesktopBridgeIdentifier>
       <Properties>DesktopBridgeSelfContained=%(DesktopBridgeSelfContained);DesktopBridgeIdentifier=%(DesktopBridgeIdentifier)</Properties>

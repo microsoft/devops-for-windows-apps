@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
+    <RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
