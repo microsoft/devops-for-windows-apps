@@ -35,16 +35,13 @@ steps:
     arguments: install --tool-path . nbgv
   displayName: Install NBGV tool
 
-- script: nbgv cloud
+- script: nbgv cloud -c
   displayName: Set Version
 
 - powershell: |
-    # Get the version version    
-    $ver = .\nbgv get-version -f json | ConvertFrom-Json
-    
     # Update appxmanifest. This must be done before build.
     $doc = Get-Content ".\WpfCoreApp.Package\Package.appxmanifest"    
-    $doc | % { $_.Replace("1.0.0", "$($ver.CloudBuildVersionVars.GitBuildVersionSimple)") } | Set-Content ".\WpfCoreApp.Package\Package.appxmanifest"    
+    $doc | % { $_.Replace("1.0.0", "$(GitBuildVersionSimple)") } | Set-Content ".\WpfCoreApp.Package\Package.appxmanifest"    
   displayName: Update manifest version
 
 - task: MSBuild@1
@@ -55,7 +52,11 @@ steps:
     configuration: $(BuildConfiguration)
     maximumCpuCount: false
 
+- script: copy build.cer WpfCoreApp.Package\AppPackages\WpfCoreApp.Package_$(GitBuildVersionSimple).0_Test\WpfCoreApp.Package_$(GitBuildVersionSimple).0_x86.cer
+  displayName: Copy Certificate to versioned dir
+
 - task: PublishPipelineArtifact@0
   inputs:
     artifactName: Package
     targetPath: WpfCoreApp.Package/AppPackages
+
