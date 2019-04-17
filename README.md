@@ -1,6 +1,8 @@
 
 Installer page here: https://build2019devopsdemo.z13.web.core.windows.net/WpfCoreApp
 
+DevOps pipelines here: https://dev.azure.com/devops-for-client-apps/build2019-demo
+
 # Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
