@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OSVersionHelper;
+using Windows.ApplicationModel;
 
 namespace WpfCoreApp
 {
@@ -31,6 +32,16 @@ namespace WpfCoreApp
             versionText.Text = typeof(MainWindow).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
             inPackage.Text = WindowsVersionHelper.HasPackageIdentity.ToString();
             deploymentType.Text = GetDotNetInfo();
+            packageVersion.Text = GetPackageVersion();
+        }
+
+        private string GetPackageVersion()
+        {
+            if (OSVersionHelper.WindowsVersionHelper.HasPackageIdentity)
+            {
+                return $"{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}.{Package.Current.Id.Version.Revision}";
+            }
+            return "Not Packaged";
         }
 
         public static string GetDotNetInfo()
