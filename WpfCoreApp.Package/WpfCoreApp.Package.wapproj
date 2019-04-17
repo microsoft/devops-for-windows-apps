@@ -69,7 +69,7 @@
     <!-- Generate architecture specific packages. Values: x86|x64|arm|arm64 -->
     <AppxBundlePlatforms>x86</AppxBundlePlatforms>
     <!-- App installer file base url -->
-    <AppInstallerUri>https://build2019devopsdemo.z13.web.core.windows.net/WpfCoreApp</AppInstallerUri>
+    <AppInstallerUri>https://build2019devopsdemo.z13.web.core.windows.net/CI</AppInstallerUri>
     <AppxBundle>Always</AppxBundle>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
@@ -95,7 +95,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WpfCoreApp\WpfCoreApp.csproj">
       <DesktopBridgeSelfContained>True</DesktopBridgeSelfContained>
-      <DesktopBridgeIdentifier>$(DesktopBridgeRuntimeIdentifier)</DesktopBridgeIdentifier>
+      <DesktopBridgeIdentifier>win-x86</DesktopBridgeIdentifier>
       <Properties>SelfContained=%(DesktopBridgeSelfContained);RuntimeIdentifier=%(DesktopBridgeIdentifier)</Properties>
       <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
     </ProjectReference>
