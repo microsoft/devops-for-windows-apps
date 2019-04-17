@@ -1,6 +1,8 @@
 
 Installer page here: https://build2019devopsdemo.z13.web.core.windows.net/WpfCoreApp
 
+https://build2019devopsdemo.z13.web.core.windows.net/WpfCoreApp/WpfCoreApp.Package_1.0.22.0_Test/WpfCoreApp.Package_1.0.22.0_x86.cer
+
 # Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a

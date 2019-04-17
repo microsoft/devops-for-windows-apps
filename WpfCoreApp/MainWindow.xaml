@@ -25,13 +25,18 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        
         <Label Content="Version" Target="{Binding ElementName=versionText}" VerticalAlignment="Center" />
         <TextBlock x:Name="versionText" Grid.Column="1" VerticalAlignment="Center" />
+
+        <Label Grid.Row="2" Content="Package Version" Target="{Binding ElementName=packageVersion}" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="2" x:Name="packageVersion" Grid.Column="1" VerticalAlignment="Center" />
 
         <Label Grid.Row="1" Content="Deployment" Target="{Binding ElementName=deploymentType}" VerticalAlignment="Center" />
         <TextBlock Grid.Row="1" x:Name="deploymentType" Grid.Column="1" VerticalAlignment="Center" />
 
         <Label Grid.Row="2" Content="In Package" Target="{Binding ElementName=inPackage}" VerticalAlignment="Center" />
         <TextBlock Grid.Row="2" x:Name="inPackage" Grid.Column="1" VerticalAlignment="Center" />
+       
     </Grid>
 </Window>
