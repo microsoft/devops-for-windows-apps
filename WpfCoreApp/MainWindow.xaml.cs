@@ -62,5 +62,10 @@ namespace WpfCoreApp
             
             return result;
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
