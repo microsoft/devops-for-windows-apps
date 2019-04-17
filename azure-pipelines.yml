@@ -16,47 +16,71 @@ pr:
     exclude:
     - '**/*.md'
 
-pool:
-  vmImage: windows-2019
-
 variables: 
   BuildConfiguration: Release
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  
-steps:
-- task: DotNetCoreInstaller@0
-  inputs:
-    version: '3.0.100-preview5-011323'
 
-- task: DotNetCoreCLI@2  
-  inputs:
-    command: custom
-    custom: tool
-    arguments: install --tool-path . nbgv
-  displayName: Install NBGV tool
+jobs:
+- job: Build
+  pool:
+    vmImage: windows-2019
 
-- script: nbgv cloud -c
-  displayName: Set Version
+  strategy:
+    matrix:
+      Channel_Release:
+        ChannelName: Release
+        DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/WpfCoreApp
+        MsixPackageId: a848792f-1828-4766-82d1-832c0a095cb0
+        MsixPublisherId: CN=build
+        MsixPackageDisplayName: WpfCoreApp
+      Channel_CI:
+        ChannelName: CI
+        DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/CI
+        MsixPackageId: a848792f-1828-4766-82d1-832c0a095cb0.CI
+        MsixPublisherId: CN=build
+        MsixPackageDisplayName: WpfCoreApp (CI)
 
-- powershell: |
-    # Update appxmanifest. This must be done before build.
-    $doc = Get-Content ".\WpfCoreApp.Package\Package.appxmanifest"    
-    $doc | % { $_.Replace("1.0.0", "$(GitBuildVersionSimple)") } | Set-Content ".\WpfCoreApp.Package\Package.appxmanifest"    
-  displayName: Update manifest version
+  steps:
+  - task: DotNetCoreInstaller@0
+    inputs:
+      version: '3.0.100-preview5-011323'
 
-- task: MSBuild@1
-  displayName: Build for $(BuildConfiguration)
-  inputs:
-    solution: WpfCoreApp.sln
-    msbuildArguments: /restore 
-    configuration: $(BuildConfiguration)
-    maximumCpuCount: false
+  - task: DotNetCoreCLI@2  
+    inputs:
+      command: custom
+      custom: tool
+      arguments: install --tool-path . nbgv
+    displayName: Install NBGV tool
 
-- script: copy build.cer WpfCoreApp.Package\AppPackages\WpfCoreApp.Package_$(GitBuildVersionSimple).0_Test\WpfCoreApp.Package_$(GitBuildVersionSimple).0_x86.cer
-  displayName: Copy Certificate to versioned dir
+  - script: nbgv cloud -c
+    displayName: Set Version
 
-- task: PublishPipelineArtifact@0
-  inputs:
-    artifactName: Package
-    targetPath: WpfCoreApp.Package/AppPackages
+  - powershell: |
+      # Update appxmanifest. This must be done before build.
+      # Set the per-channel values into the appxmanifest, replacing the checked-in values
+      $doc = Get-Content ".\WpfCoreApp.Package\Package.appxmanifest" |
+      % { $_.Replace("1.0.0", "$(GitBuildVersionSimple)").
+             Replace("a848792f-1828-4766-82d1-832c0a095cb0.Local", "$(MsixPackageId)").
+             Replace("WpfCoreApp.Package (Local)", "$(MsixPackageDisplayName)").
+             Replace("CN=build", "$(MsixPublisherId)")
+        } 
+      Set-Content ".\WpfCoreApp.Package\Package.appxmanifest" -Value $doc
+
+    displayName: Update manifest version
+
+  - task: MSBuild@1
+    displayName: Build for $(BuildConfiguration)
+    inputs:
+      solution: WpfCoreApp.sln
+      msbuildArguments: /restore /p:ChannelName=$(ChannelName) /p:AppInstallerUri=$(DistributionUrl)
+      configuration: $(BuildConfiguration)
+      maximumCpuCount: false
+
+  - script: copy build.cer WpfCoreApp.Package\AppPackages\WpfCoreApp.Package_$(GitBuildVersionSimple).0_Test\WpfCoreApp.Package_$(GitBuildVersionSimple).0_x86.cer
+    displayName: Copy Certificate to versioned dir
+
+  - task: PublishPipelineArtifact@0
+    inputs:
+      artifactName: $(ChannelName)
+      targetPath: WpfCoreApp.Package/AppPackages
 

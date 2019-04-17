@@ -6,6 +6,8 @@
     <UseWPF>true</UseWPF>
     <RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
     <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
+    <ChannelName>CI</ChannelName>
+    <DefineConstants>$(DefineConstants);$(ChannelName.ToUpperInvariant())</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
