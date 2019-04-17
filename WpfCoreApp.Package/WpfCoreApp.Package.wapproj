@@ -54,10 +54,9 @@
     <TargetPlatformVersion>10.0.17763.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <PackageCertificateKeyFile>WpfCoreApp_TestKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>AFF8D6BDECE343C554EFA9CA1258AEE2BB8BAF1D</PackageCertificateThumbprint>
+    <EntryPointProjectUniqueName>..\WpfCoreApp\WpfCoreApp.csproj</EntryPointProjectUniqueName>
     <!-- True/false. Sign the output packages. Default is true. -->
-    <!--<AppxPackageSigningEnabled>true</AppxPackageSigningEnabled>-->
+    <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
     <!-- Values: StoreUpload, CI, SideLoadOnly. Default is StoreUpload.
          StoreUpload = appxupload + sideload
          CI = appxupload
@@ -77,7 +76,6 @@
     <!-- TODO: OnApplicationRun, Hourly, Daily, Weekly -->
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
     <AppxBundle>Always</AppxBundle>
-    <EntryPointProjectUniqueName>..\WpfCoreApp\WpfCoreApp.csproj</EntryPointProjectUniqueName>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -92,7 +90,6 @@
     <Content Include="Images\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Images\StoreLogo.png" />
     <Content Include="Images\Wide310x150Logo.scale-200.png" />
-    <Content Include="WpfCoreApp_TestKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WpfCoreApp\WpfCoreApp.csproj">
