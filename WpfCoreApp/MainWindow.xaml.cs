@@ -30,6 +30,12 @@ namespace WpfCoreApp
             InitializeComponent();
 
             versionText.Text = typeof(MainWindow).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+
+#if CI
+            versionText.Text += " - CI";
+#elif RELEASE
+            versionText.Text += " - Release";
+#endif
             inPackage.Text = WindowsVersionHelper.HasPackageIdentity.ToString();
             deploymentType.Text = GetDotNetInfo();
             packageVersion.Text = GetPackageVersion();
