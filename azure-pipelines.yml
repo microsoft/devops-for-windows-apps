@@ -55,12 +55,11 @@ steps:
     configuration: $(BuildConfiguration)
     maximumCpuCount: false
 
+- script: copy build.cer WpfCoreApp.Package\AppPackages\WpfCoreApp.Package_$(GitBuildVersionSimple).0_Test\WpfCoreApp.Package_$(GitBuildVersionSimple).0_x86.cer
+  displayName: Copy Certificate to versioned dir
+
 - task: PublishPipelineArtifact@0
   inputs:
     artifactName: Package
     targetPath: WpfCoreApp.Package/AppPackages
-    
-- task: PublishPipelineArtifact@0
-  inputs:
-    artifactName: PublicCert
-    targetPath: build.cer   
+
