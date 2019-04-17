@@ -84,7 +84,7 @@
     <!-- Update frequency -->
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
 
-    <!-- TODO: values for this -->
+    <!-- TODO: OnApplicationRun, Hourly, Daily, Weekly -->
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
     <AppxBundle>Always</AppxBundle>
   </PropertyGroup> 
