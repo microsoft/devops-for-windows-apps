@@ -10,7 +10,7 @@ using Microsoft.ApplicationInsights.Extensibility;
 
 namespace WpfCoreApp.Telemetry
 {
-    class EnvironmentTelemetryInitializer : ITelemetryInitializer
+    internal class EnvironmentTelemetryInitializer : ITelemetryInitializer
     {
 
 #if CHANNEL_RELEASE

@@ -8,7 +8,7 @@ using Microsoft.ApplicationInsights.Extensibility;
 
 namespace WpfCoreApp.Telemetry
 {
-    class AppVersionTelemetryInitializer : ITelemetryInitializer
+    internal class AppVersionTelemetryInitializer : ITelemetryInitializer
     {
         private readonly string _wpfVersion;        
         private readonly string _appVersion;
