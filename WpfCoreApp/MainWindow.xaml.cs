@@ -36,6 +36,8 @@ namespace WpfCoreApp
             versionText.Text += " - CI";
 #elif CHANNEL_RELEASE
             versionText.Text += " - Release";
+#else
+            versionText.Text += " - Development";
 #endif
             inPackage.Text = WindowsVersionHelper.HasPackageIdentity.ToString();
             deploymentType.Text = GetDotNetInfo();

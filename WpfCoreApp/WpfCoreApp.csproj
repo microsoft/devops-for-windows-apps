@@ -6,7 +6,7 @@
     <UseWPF>true</UseWPF>
     <RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
     <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
-    <ChannelName>CI</ChannelName>
+    <ChannelName>Local</ChannelName>
     <DefineConstants>$(DefineConstants);CHANNEL_$(ChannelName.ToUpperInvariant())</DefineConstants>
   </PropertyGroup>
 
