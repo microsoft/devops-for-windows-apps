@@ -68,7 +68,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\*.png" />
+    <Content Include="Images\*" />
     <Content Include="Package.appinstaller" />
   </ItemGroup>
   <ItemGroup>

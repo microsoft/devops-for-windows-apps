@@ -8,6 +8,7 @@
     <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
     <ChannelName>CI</ChannelName>
     <DefineConstants>$(DefineConstants);$(ChannelName.ToUpperInvariant())</DefineConstants>
+    <ApplicationIcon>win.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
