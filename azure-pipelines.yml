@@ -61,7 +61,7 @@ jobs:
       $doc = Get-Content ".\WpfCoreApp.Package\Package.appxmanifest" |
       % { $_.Replace("1.0.0", "$(GitBuildVersionSimple)").
              Replace("WpfCoreApp.DevOpsDemo.local", "$(MsixPackageId)").
-             Replace("WpfCoreApp.Package (Local)", "$(MsixPackageDisplayName)").
+             Replace("WpfCoreApp (Local)", "$(MsixPackageDisplayName)").
              Replace("CN=build", "$(MsixPublisherId)")
         } 
       Set-Content ".\WpfCoreApp.Package\Package.appxmanifest" -Value $doc
