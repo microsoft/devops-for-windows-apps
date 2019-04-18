@@ -82,6 +82,7 @@ jobs:
     displayName: Build for $(BuildConfiguration)
     inputs:
       solution: WpfCoreApp.sln
+      platform: x86
       msbuildArguments: /restore /p:ChannelName=$(ChannelName) /p:AppInstallerUri=$(DistributionUrl)
       configuration: $(BuildConfiguration)
       maximumCpuCount: false
