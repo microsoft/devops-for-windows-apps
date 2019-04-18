@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OSVersionHelper;
 using Windows.ApplicationModel;
+using WpfCoreApp.Telemetry;
 
 namespace WpfCoreApp
 {
@@ -31,14 +32,16 @@ namespace WpfCoreApp
 
             versionText.Text = typeof(MainWindow).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 
-#if CI
+#if CHANNEL_CI
             versionText.Text += " - CI";
-#elif RELEASE
+#elif CHANNEL_RELEASE
             versionText.Text += " - Release";
 #endif
             inPackage.Text = WindowsVersionHelper.HasPackageIdentity.ToString();
             deploymentType.Text = GetDotNetInfo();
             packageVersion.Text = GetPackageVersion();
+
+            DiagnosticsClient.TrackPageView(nameof(MainWindow));
         }
 
         private string GetPackageVersion()
