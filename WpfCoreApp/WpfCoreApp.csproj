@@ -6,14 +6,19 @@
     <UseWPF>true</UseWPF>
     <RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
     <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
-    <ChannelName>CI</ChannelName>
-    <DefineConstants>$(DefineConstants);$(ChannelName.ToUpperInvariant())</DefineConstants>
+    <ChannelName>Local</ChannelName>
+    <DefineConstants>$(DefineConstants);CHANNEL_$(ChannelName.ToUpperInvariant())</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AppInsights.WindowsDesktop" Version="2.10.37-preview" />
     <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.138" PrivateAssets="all" />
     <PackageReference Include="OSVersionHelper" Version="1.0.10" />
     <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.17763.141-preview" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ApplicationInsights.config" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

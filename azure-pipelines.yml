@@ -68,6 +68,16 @@ jobs:
 
     displayName: Update manifest version
 
+  - powershell: |
+      # Update App Insights instrumentation key
+      $doc = Get-Content ".\WpfCoreApp\app.config"    
+      $doc | % { $_.Replace("__AppInsightsKey__", "$(AppInsightsKey)") } | Set-Content ".\WpfCoreApp\app.config"
+
+    displayName: Set AppInsights Config
+    env:
+      AppInsightsKey: $(AppInsightsKey)
+    condition: and(succeeded(), not(eq(variables['build.reason'], 'PullRequest')), not(eq(variables['AppInsightsKey'], '')))
+
   - task: MSBuild@1
     displayName: Build for $(BuildConfiguration)
     inputs:
