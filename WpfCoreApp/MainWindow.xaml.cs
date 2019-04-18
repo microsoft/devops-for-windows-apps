@@ -71,13 +71,16 @@ namespace WpfCoreApp
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var fs = File.OpenText(System.IO.Path.Combine(System.Environment.CurrentDirectory,
-               Assembly.GetExecutingAssembly().GetName().Name + ".runtimeConfig.json"));
+            /**
+            var a = Assembly.GetExecutingAssembly();
+            var cwd = new FileInfo(a.Location);
+            var fs = File.OpenText(System.IO.Path.Combine(cwd.DirectoryName,a.GetName().Name + ".deps.json"));
 
             var j = System.Text.Json.JsonDocument.Parse(fs.ReadToEnd());
 
-            var v = j.RootElement.GetProperty("runtimeOptions").GetProperty("framework").GetProperty("version");
-            RuntimeVersionInfo.Text = v.GetString();
+            var v = j.RootElement.GetProperty("targets").GetProperty(".NETCoreApp,Version=v3.0/win-x86").GetProperty("version");
+        **/
+            RuntimeVersionInfo.Text = typeof(object).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 
         }
     }
