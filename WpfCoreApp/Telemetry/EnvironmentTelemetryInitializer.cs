@@ -12,22 +12,13 @@ namespace WpfCoreApp.Telemetry
 {
     internal class EnvironmentTelemetryInitializer : ITelemetryInitializer
     {
-
-#if CHANNEL_RELEASE
-        private const string Channel = "Release";
-#elif CHANNEL_CI
-        private const string Channel = "CI";
-#else
-        private const string Channel = "Development";
-#endif
-
         public void Initialize(ITelemetry telemetry)
         {
-            telemetry.Context.GlobalProperties["Environment"] = Channel;
+            telemetry.Context.GlobalProperties["Environment"] = ThisAppInfo.GetDisplayName();
             // Always default to Development if we're in the debugger
             if (Debugger.IsAttached)
             {
-                telemetry.Context.GlobalProperties["Environment"] = "Development";
+                telemetry.Context.GlobalProperties["Environment"] += " debugging";
             }       
         }
     }

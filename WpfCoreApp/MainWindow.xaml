@@ -26,6 +26,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="50" />                    
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -33,24 +34,28 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Grid.ColumnSpan="2" Background="LightBlue">
+            <TextBlock Text="DevOps Demo" HorizontalAlignment="Center"/>
+        </Border>
         
-        <Label Content="Version" Target="{Binding ElementName=versionText}" VerticalAlignment="Center" />
-        <TextBlock x:Name="versionText" Grid.Column="1" VerticalAlignment="Center" />
+        <Label Grid.Row="1" Content="Version" Target="{Binding ElementName=versionText}" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="1" x:Name="versionText" Grid.Column="1" VerticalAlignment="Center" />
 
-        <Label Grid.Row="1" Content="Package Version" Target="{Binding ElementName=packageVersion}" VerticalAlignment="Center" />
-        <TextBlock Grid.Row="1" x:Name="packageVersion" Grid.Column="1" VerticalAlignment="Center" />
+        <Label Grid.Row="2" Content="Package Version" Target="{Binding ElementName=packageVersion}" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="2" x:Name="packageVersion" Grid.Column="1" VerticalAlignment="Center" />
 
-        <Label Grid.Row="2" Content="Deployment" Target="{Binding ElementName=deploymentType}" VerticalAlignment="Center" />
-        <TextBlock Grid.Row="2" x:Name="deploymentType" Grid.Column="1" VerticalAlignment="Center" />
+        <Label Grid.Row="3" Content="Deployment" Target="{Binding ElementName=deploymentType}" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="3" x:Name="deploymentType" Grid.Column="1" VerticalAlignment="Center" />
 
-        <Label Grid.Row="3" Content="In Package" Target="{Binding ElementName=inPackage}" VerticalAlignment="Center" />
-        <TextBlock Grid.Row="3" x:Name="inPackage" Grid.Column="1" VerticalAlignment="Center" />
+        <Label Grid.Row="4" Content="In Package" Target="{Binding ElementName=inPackage}" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="4" x:Name="inPackage" Grid.Column="1" VerticalAlignment="Center" />
 
-        <Label Grid.Row="4" Content="Installed from:" Target="{Binding ElementName=installedFrom}" VerticalAlignment="Center" />
-        <TextBlock Grid.Row="4" x:Name="installedFrom" Grid.Column="1" VerticalAlignment="Center" />
+        <Label Grid.Row="5" Content="Installed from:" Target="{Binding ElementName=installedFrom}" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="5" x:Name="installedFrom" Grid.Column="1" VerticalAlignment="Center" />
         
-        <Button Grid.Row="5" Click="Button_Click" Height="40" VerticalAlignment="Top">Show Runtime Version</Button>
-        <TextBlock x:Name="RuntimeVersionInfo" Grid.Row="5" Grid.Column="1"
+        <Button Grid.Row="6" Click="Button_Click" Height="40" VerticalAlignment="Top">Show Runtime Version</Button>
+        <TextBlock x:Name="RuntimeVersionInfo" Grid.Row="6" Grid.Column="1"
                    TextWrapping="WrapWithOverflow" />
         
     </Grid>
