@@ -7,7 +7,7 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="a848792f-1828-4766-82d1-832c0a095cb0.Local"
+    Name="WpfCoreApp.DemoApp"
     Publisher="CN=build"
     Version="1.0.0.0" />
 
@@ -19,7 +19,6 @@
 
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
-    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.14393.0" MaxVersionTested="10.0.14393.0" />
   </Dependencies>
 
   <Resources>
@@ -31,12 +30,11 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="WpfCoreApp.Package (Local)"
-        Description="WpfCoreApp.Package Description"
+        DisplayName="WpfCoreApp (Local)"
+        Description="WpfCoreApp Demo App"
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png">
-        <uap:SplashScreen Image="Images\SplashScreen.png" />
         <uap:DefaultTile/>
       </uap:VisualElements>
     </Application>

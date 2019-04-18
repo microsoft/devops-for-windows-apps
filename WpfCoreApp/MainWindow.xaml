@@ -10,6 +10,9 @@
         <Style TargetType="TextBlock">
             <Setter Property="FontSize" Value="24" />
         </Style>
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="24" />
+        </Style>
         <Style TargetType="Label">
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="FontSize" Value="24" />
@@ -21,6 +24,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -38,6 +42,9 @@
 
         <Label Grid.Row="3" Content="In Package" Target="{Binding ElementName=inPackage}" VerticalAlignment="Center" />
         <TextBlock Grid.Row="3" x:Name="inPackage" Grid.Column="1" VerticalAlignment="Center" />
-       
+        
+        <Button Grid.Row="4" Click="Button_Click">Show Runtime Version</Button>
+        <TextBlock x:Name="RuntimeVersionInfo" Grid.Row="4" Grid.Column="1"/>
+        
     </Grid>
 </Window>
