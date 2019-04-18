@@ -4,8 +4,9 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
-    <RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
     <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
+    <ApplicationIcon>win.ico</ApplicationIcon>
+    <RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
     <ChannelName>CI</ChannelName>
     <DefineConstants>$(DefineConstants);$(ChannelName.ToUpperInvariant())</DefineConstants>
     <ApplicationIcon>win.ico</ApplicationIcon>
