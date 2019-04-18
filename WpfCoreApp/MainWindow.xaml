@@ -31,6 +31,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
         <Label Content="Version" Target="{Binding ElementName=versionText}" VerticalAlignment="Center" />
@@ -44,9 +45,12 @@
 
         <Label Grid.Row="3" Content="In Package" Target="{Binding ElementName=inPackage}" VerticalAlignment="Center" />
         <TextBlock Grid.Row="3" x:Name="inPackage" Grid.Column="1" VerticalAlignment="Center" />
+
+        <Label Grid.Row="4" Content="Installed from:" Target="{Binding ElementName=installedFrom}" VerticalAlignment="Center" />
+        <TextBlock Grid.Row="4" x:Name="installedFrom" Grid.Column="1" VerticalAlignment="Center" />
         
-        <Button Grid.Row="4" Click="Button_Click" Height="40" VerticalAlignment="Top">Show Runtime Version</Button>
-        <TextBlock x:Name="RuntimeVersionInfo" Grid.Row="4" Grid.Column="1"
+        <Button Grid.Row="5" Click="Button_Click" Height="40" VerticalAlignment="Top">Show Runtime Version</Button>
+        <TextBlock x:Name="RuntimeVersionInfo" Grid.Row="5" Grid.Column="1"
                    TextWrapping="WrapWithOverflow" />
         
     </Grid>
