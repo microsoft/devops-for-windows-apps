@@ -4,15 +4,10 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
-    <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
     <ApplicationIcon>win.ico</ApplicationIcon>
-    <RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
-    <ChannelName>CI</ChannelName>
-    <DefineConstants>$(DefineConstants);$(ChannelName.ToUpperInvariant())</DefineConstants>
-    <ApplicationIcon>win.ico</ApplicationIcon>
-    <ChannelName>Local</ChannelName>
-    <DefineConstants>$(DefineConstants);CHANNEL_$(ChannelName.ToUpperInvariant())</DefineConstants>
     <Platforms>AnyCPU;x86</Platforms>
+    <RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
+    <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
   </PropertyGroup>
 
   <ItemGroup>

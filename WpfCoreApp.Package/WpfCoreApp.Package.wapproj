@@ -51,7 +51,7 @@
     <!-- Generate .appinstaller and HTML -->
     <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
     <!-- Generate architecture specific packages. Values: x86|x64|arm|arm64 -->
-    <AppxBundlePlatforms>x86</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <!-- App installer file base url -->
     <AppInstallerUri>https://build2019devopsdemo.z13.web.core.windows.net/CI</AppInstallerUri>
     <AppxBundle>Always</AppxBundle>
@@ -60,7 +60,6 @@
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
     <AppxBundle>Always</AppxBundle>
     <EntryPointProjectUniqueName>..\WpfCoreApp\WpfCoreApp.csproj</EntryPointProjectUniqueName>
-    <PackageCertificateThumbprint>AFF8D6BDECE343C554EFA9CA1258AEE2BB8BAF1D</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
