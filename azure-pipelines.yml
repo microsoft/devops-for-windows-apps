@@ -30,13 +30,13 @@ jobs:
       Channel_Release:
         ChannelName: Release
         DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/WpfCoreApp
-        MsixPackageId: a848792f-1828-4766-82d1-832c0a095cb0
+        MsixPackageId: WpfCoreApp.DevOpsDemo
         MsixPublisherId: CN=build
         MsixPackageDisplayName: WpfCoreApp
       Channel_CI:
         ChannelName: CI
         DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/CI
-        MsixPackageId: a848792f-1828-4766-82d1-832c0a095cb0.CI
+        MsixPackageId: WpfCoreApp.DevOpsDemo.CI
         MsixPublisherId: CN=build
         MsixPackageDisplayName: WpfCoreApp (CI)
 
@@ -60,7 +60,7 @@ jobs:
       # Set the per-channel values into the appxmanifest, replacing the checked-in values
       $doc = Get-Content ".\WpfCoreApp.Package\Package.appxmanifest" |
       % { $_.Replace("1.0.0", "$(GitBuildVersionSimple)").
-             Replace("a848792f-1828-4766-82d1-832c0a095cb0.Local", "$(MsixPackageId)").
+             Replace("WpfCoreApp.DevOpsDemo.local", "$(MsixPackageId)").
              Replace("WpfCoreApp.Package (Local)", "$(MsixPackageDisplayName)").
              Replace("CN=build", "$(MsixPublisherId)")
         } 
