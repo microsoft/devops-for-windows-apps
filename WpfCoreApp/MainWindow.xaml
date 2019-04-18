@@ -42,10 +42,9 @@
 
         <Label Grid.Row="3" Content="In Package" Target="{Binding ElementName=inPackage}" VerticalAlignment="Center" />
         <TextBlock Grid.Row="3" x:Name="inPackage" Grid.Column="1" VerticalAlignment="Center" />
-
-        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="10">
-            <Button Click="Button_Click">Show Runtime Version</Button>
-            <TextBox x:Name="RuntimeVersionInfo" Width="300"/>
-        </StackPanel>
+        
+        <Button Grid.Row="4" Click="Button_Click">Show Runtime Version</Button>
+        <TextBlock x:Name="RuntimeVersionInfo" Grid.Row="4" Grid.Column="1"/>
+        
     </Grid>
 </Window>
