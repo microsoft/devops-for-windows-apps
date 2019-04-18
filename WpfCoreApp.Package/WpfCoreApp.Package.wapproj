@@ -55,7 +55,7 @@
     <!-- App installer file base url -->
     <AppInstallerUri>https://build2019devopsdemo.z13.web.core.windows.net/CI</AppInstallerUri>
     <AppxBundle>Always</AppxBundle>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
     <AppxBundle>Always</AppxBundle>
