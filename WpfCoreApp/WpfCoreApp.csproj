@@ -11,6 +11,7 @@
     <ApplicationIcon>win.ico</ApplicationIcon>
     <ChannelName>Local</ChannelName>
     <DefineConstants>$(DefineConstants);CHANNEL_$(ChannelName.ToUpperInvariant())</DefineConstants>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
