@@ -5,13 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfCoreApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="1200">
     <Window.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="FontSize" Value="24" />
+            <Setter Property="Margin" Value="5" />
         </Style>
         <Style TargetType="Button">
             <Setter Property="FontSize" Value="24" />
+            <Setter Property="Margin" Value="5" />
         </Style>
         <Style TargetType="Label">
             <Setter Property="FontWeight" Value="Bold" />
@@ -43,8 +45,9 @@
         <Label Grid.Row="3" Content="In Package" Target="{Binding ElementName=inPackage}" VerticalAlignment="Center" />
         <TextBlock Grid.Row="3" x:Name="inPackage" Grid.Column="1" VerticalAlignment="Center" />
         
-        <Button Grid.Row="4" Click="Button_Click">Show Runtime Version</Button>
-        <TextBlock x:Name="RuntimeVersionInfo" Grid.Row="4" Grid.Column="1"/>
+        <Button Grid.Row="4" Click="Button_Click" Height="40" VerticalAlignment="Top">Show Runtime Version</Button>
+        <TextBlock x:Name="RuntimeVersionInfo" Grid.Row="4" Grid.Column="1"
+                   TextWrapping="WrapWithOverflow" />
         
     </Grid>
 </Window>
