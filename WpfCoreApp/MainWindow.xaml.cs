@@ -26,6 +26,7 @@ namespace WpfCoreApp
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             RuntimeVersionInfo.Text = ThisAppInfo.GetDotNetRuntimeInfo();
+            DiagnosticsClient.TrackEvent("ClickShowRuntimeInfo");
         }
     }
 }
