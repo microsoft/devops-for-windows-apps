@@ -5,6 +5,11 @@ VisualStudioVersion = 16.0.28818.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests", "tests\tests.csproj", "{9831A909-21B9-4F3B-AC9E-88A13F4DAF9E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4F4B9354-5FBF-4184-AB29-2EF3503C6F0B}"
+	ProjectSection(SolutionItems) = preProject
+		EnableScreenCast.testsettings = EnableScreenCast.testsettings
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
