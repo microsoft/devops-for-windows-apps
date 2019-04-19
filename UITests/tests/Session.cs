@@ -70,8 +70,6 @@ namespace tests
             // Close the application and delete the session
             if (session != null)
             {
-                session.FindElementByAccessibilityId("PART_Close").Click();
-
                 session.Quit();
                 session = null;
 
