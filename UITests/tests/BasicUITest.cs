@@ -25,10 +25,14 @@ namespace tests
         }
 
         [TestMethod]
-        public void NavigateMainTabs()
+        public void ClickButton()
         {
             Console.WriteLine("Trying to Find Home Button");
-            session.FindElementByName("ButtonShowRuntimeVersionInfo").Click();
+            var button = session.FindElementByAccessibilityId("ButtonShowRuntimeVersionInfo");
+            Assert.AreEqual("ControlType.Button", button.TagName);
+            Assert.AreEqual("Show Runtime Version", button.Text);
+            button.Click();
+
         }
     }
 }
