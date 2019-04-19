@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfCoreApp"
         mc:Ignorable="d"
+        AutomationProperties.AutomationId="WPFCoreAppMainWindow"
         Title="MainWindow" Height="450" Width="1200">
     <Window.Resources>
         <Style TargetType="TextBlock">
@@ -54,7 +55,7 @@
         <Label Grid.Row="5" Content="Installed from:" Target="{Binding ElementName=installedFrom}" VerticalAlignment="Center" />
         <TextBlock Grid.Row="5" x:Name="installedFrom" Grid.Column="1" VerticalAlignment="Center" />
         
-        <Button Grid.Row="6" Click="Button_Click" Height="40" VerticalAlignment="Top">Show Runtime Version</Button>
+        <Button x:Name="ButtonShowRuntimeVersionInfo" Grid.Row="6" Click="Button_Click" Height="40" VerticalAlignment="Top">Show Runtime Version</Button>
         <TextBlock x:Name="RuntimeVersionInfo" Grid.Row="6" Grid.Column="1"
                    TextWrapping="WrapWithOverflow" />
         
