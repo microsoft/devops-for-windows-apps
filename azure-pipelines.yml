@@ -44,17 +44,6 @@ jobs:
         MsixPackageDisplayName: WpfCoreApp (CI)
 
   steps:
-  - task: DotNetCoreInstaller@0
-    inputs:
-      version: '3.0.100-preview4-011223'
-
-  - task: DotNetCoreCLI@2  
-    inputs:
-      command: custom
-      custom: tool
-      arguments: install --tool-path . nbgv
-    displayName: Install NBGV tool
-
   - script: nbgv cloud -c
     displayName: Set Version
 
