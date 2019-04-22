@@ -10,8 +10,6 @@
 
   <UpdateSettings>
     <OnLaunch HoursBetweenUpdateChecks="0" ShowPrompt="true" UpdateBlocksActivation="true" />
-    <AutomaticBackgroundTask />
-    <ForceUpdateFromAnyVersion>true</ForceUpdateFromAnyVersion>
   </UpdateSettings>
 
 </AppInstaller>
