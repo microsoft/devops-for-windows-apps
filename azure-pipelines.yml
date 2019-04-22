@@ -51,10 +51,10 @@ jobs:
       # Update appxmanifest. This must be done before build.
       # Set the per-channel values into the appxmanifest, replacing the checked-in values
       [xml]$manifest= get-content ".\WpfCoreApp.Package\Package.appxmanifest"
-      $manifest.Package.Identity.Version = $(GitBuildVersionSimple)
-      $manifest.Package.Identity.Name = $(MsixPackageId)
-      $manifest.Package.Identity.Publisher = $(MsixPublisherId)
-      $manifest.Package.Properties.DisplayName = $(MsixPackageDisplayName)
+      $manifest.Package.Identity.Version = "$(GitBuildVersionSimple)"
+      $manifest.Package.Identity.Name = "$(MsixPackageId)"
+      $manifest.Package.Identity.Publisher = "$(MsixPublisherId)"
+      $manifest.Package.Properties.DisplayName ="$(MsixPackageDisplayName)
       $manifest.save(".\WpfCoreApp.Package\Package.appxmanifest")
 
     displayName: Update manifest version
