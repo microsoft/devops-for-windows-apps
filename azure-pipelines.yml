@@ -62,8 +62,9 @@ jobs:
 
   - powershell: |
       # Update App Insights instrumentation key
-      $doc = Get-Content ".\WpfCoreApp\app.config"    
-      $doc | % { $_.Replace("__AppInsightsKey__", "$(AppInsightsKey)") } | Set-Content ".\WpfCoreApp\app.config"
+      [xml]$doc = Get-Content ".\WpfCoreApp\app.config"    
+      $doc.configuration.appSettings.add.value = "$(AppInsightsKey)"
+      $doc.save(".\WpfCoreApp\app.config")
 
     displayName: Set AppInsights Config
     env:
