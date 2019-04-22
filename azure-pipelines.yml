@@ -54,7 +54,7 @@ jobs:
       $manifest.Package.Identity.Version = "$(GitBuildVersionSimple)"
       $manifest.Package.Identity.Name = "$(MsixPackageId)"
       $manifest.Package.Identity.Publisher = "$(MsixPublisherId)"
-      $manifest.Package.Properties.DisplayName ="$(MsixPackageDisplayName)
+      $manifest.Package.Properties.DisplayName = "$(MsixPackageDisplayName)"
       $manifest.save(".\WpfCoreApp.Package\Package.appxmanifest")
 
     displayName: Update manifest version
