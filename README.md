@@ -1,11 +1,11 @@
 
 ## CI Channel 
-[![Build Status](https://dev.azure.com/devops-for-client-apps/build2019-demo/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Channel_CI)](https://dev.azure.com/devops-for-client-apps/build2019-demo/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://dev.azure.com/devops-for-client-apps/build2019-demo/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Channel_CD_Web)](https://dev.azure.com/devops-for-client-apps/build2019-demo/_build/latest?definitionId=1&branchName=master)
 
-[![CI](https://img.shields.io/azure-devops/release/devops-for-client-apps/99e907d0-45c4-4065-9d18-a85a42d82d83/1/1.svg?style=flat-square)](https://build2019devopsdemo.z13.web.core.windows.net/CI)
+[![CI](https://img.shields.io/azure-devops/release/devops-for-client-apps/99e907d0-45c4-4065-9d18-a85a42d82d83/1/1.svg?style=flat-square)](https://build2019devopsdemo.z13.web.core.windows.net/CD)
 
 ## Release Channel
-[![Build Status](https://dev.azure.com/devops-for-client-apps/build2019-demo/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Channel_Release)](https://dev.azure.com/devops-for-client-apps/build2019-demo/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://dev.azure.com/devops-for-client-apps/build2019-demo/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Channel_Prod_Web)](https://dev.azure.com/devops-for-client-apps/build2019-demo/_build/latest?definitionId=1&branchName=master)
 
 [![CI](https://img.shields.io/azure-devops/release/devops-for-client-apps/99e907d0-45c4-4065-9d18-a85a42d82d83/1/9.svg?style=flat-square)](https://build2019devopsdemo.z13.web.core.windows.net/WpfCoreApp)
 
