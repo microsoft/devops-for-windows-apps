@@ -44,6 +44,7 @@ jobs:
         MsixPublisherId: CN=E40A5878-9BC7-45A3-BBFC-B988EA6795B5
         MsixPackageDisplayName: WpfCoreApp (Store)
         MsixBuildMode: CI
+        MsixGenerateAppInstaller: false
       Channel_CD_Web:
         ChannelName: CD-Web
         DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/CI
@@ -89,7 +90,7 @@ jobs:
     inputs:
       solution: WpfCoreApp.sln
       platform: x86
-      msbuildArguments: /restore /p:AppInstallerUri=$(DistributionUrl) /p:UapAppxPackageBuildMode=$(MsixBuildMode)
+      msbuildArguments: /restore /p:AppInstallerUri=$(DistributionUrl) /p:UapAppxPackageBuildMode=$(MsixBuildMode) /p:GenerateAppInstallerFile=$(MsixGenerateAppInstaller)
       configuration: $(BuildConfiguration)
       maximumCpuCount: false
 
