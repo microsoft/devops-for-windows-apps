@@ -43,7 +43,7 @@ jobs:
         DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/Prod
         MsixPackageId: WpfCoreApp.DevOpsDemo
         MsixPublisherId: CN=build
-        MsixPackageDisplayName: WpfCoreApp
+        MsixPackageDisplayName: WpfCoreApp (Prod)
         MsixBuildMode: SideLoadOnly
         MsixGenerateAppInstaller: true
       Channel_Prod_Store:
