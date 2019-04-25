@@ -30,9 +30,17 @@ jobs:
 
   strategy:
     matrix:
+      Channel_CD_Web:
+        ChannelName: CD-Web
+        DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/CD
+        MsixPackageId: WpfCoreApp.DevOpsDemo.CD
+        MsixPublisherId: CN=build
+        MsixPackageDisplayName: WpfCoreApp (CD)
+        MsixBuildMode: SideLoadOnly
+        MsixGenerateAppInstaller: true
       Channel_Prod_Web:
         ChannelName: Prod-Web
-        DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/WpfCoreApp
+        DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/Prod
         MsixPackageId: WpfCoreApp.DevOpsDemo
         MsixPublisherId: CN=build
         MsixPackageDisplayName: WpfCoreApp
@@ -46,15 +54,6 @@ jobs:
         MsixPackageDisplayName: WpfCoreApp (Store)
         MsixBuildMode: CI
         MsixGenerateAppInstaller: false
-      Channel_CD_Web:
-        ChannelName: CD-Web
-        DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/CD
-        MsixPackageId: WpfCoreApp.DevOpsDemo.CD
-        MsixPublisherId: CN=build
-        MsixPackageDisplayName: WpfCoreApp (CD)
-        MsixBuildMode: SideLoadOnly
-        MsixGenerateAppInstaller: true
-
 
   steps:
   - checkout: self
