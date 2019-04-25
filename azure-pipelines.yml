@@ -37,6 +37,7 @@ jobs:
         MsixPublisherId: CN=build
         MsixPackageDisplayName: WpfCoreApp
         MsixBuildMode: SideLoadOnly
+        MsixGenerateAppInstaller: true
       Channel_Prod_Store:
         ChannelName: Prod-Store
         DistributionUrl: https://not/used
@@ -52,6 +53,7 @@ jobs:
         MsixPublisherId: CN=build
         MsixPackageDisplayName: WpfCoreApp (CD)
         MsixBuildMode: SideLoadOnly
+        MsixGenerateAppInstaller: true
 
 
   steps:
