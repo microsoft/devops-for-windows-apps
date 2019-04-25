@@ -18,7 +18,7 @@ pr:
     - '**/*.md'
     - 'UITests/*'
 
-variables: 
+variables:
   BuildConfiguration: Release
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
@@ -44,6 +44,9 @@ jobs:
         MsixPackageDisplayName: WpfCoreApp (CI)
 
   steps:
+  - checkout: self
+    clean: true
+
   - script: nbgv cloud -c
     displayName: Set Version
 
@@ -62,7 +65,7 @@ jobs:
 
   - powershell: |
       # Update App Insights instrumentation key
-      [xml]$doc = Get-Content ".\WpfCoreApp\app.config"    
+      [xml]$doc = Get-Content ".\WpfCoreApp\app.config"
       $doc.configuration.appSettings.add.value = "$(AppInsightsKey)"
       $doc.save(".\WpfCoreApp\app.config")
 
