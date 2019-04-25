@@ -30,18 +30,31 @@ jobs:
 
   strategy:
     matrix:
-      Channel_Release:
-        ChannelName: Release
+      Channel_Prod_Web:
+        ChannelName: Prod-Web
         DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/WpfCoreApp
         MsixPackageId: WpfCoreApp.DevOpsDemo
         MsixPublisherId: CN=build
         MsixPackageDisplayName: WpfCoreApp
-      Channel_CI:
-        ChannelName: CI
-        DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/CI
-        MsixPackageId: WpfCoreApp.DevOpsDemo.CI
+        MsixBuildMode: SideLoadOnly
+        MsixGenerateAppInstaller: true
+      Channel_Prod_Store:
+        ChannelName: Prod-Store
+        DistributionUrl: https://not/used
+        MsixPackageId: Build.WpfCoreAppSample
+        MsixPublisherId: CN=E40A5878-9BC7-45A3-BBFC-B988EA6795B5
+        MsixPackageDisplayName: WpfCoreApp (Store)
+        MsixBuildMode: CI
+        MsixGenerateAppInstaller: false
+      Channel_CD_Web:
+        ChannelName: CD-Web
+        DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/CD
+        MsixPackageId: WpfCoreApp.DevOpsDemo.CD
         MsixPublisherId: CN=build
-        MsixPackageDisplayName: WpfCoreApp (CI)
+        MsixPackageDisplayName: WpfCoreApp (CD)
+        MsixBuildMode: SideLoadOnly
+        MsixGenerateAppInstaller: true
+
 
   steps:
   - checkout: self
@@ -79,12 +92,13 @@ jobs:
     inputs:
       solution: WpfCoreApp.sln
       platform: x86
-      msbuildArguments: /restore /p:AppInstallerUri=$(DistributionUrl)
+      msbuildArguments: /restore /p:AppInstallerUri=$(DistributionUrl) /p:UapAppxPackageBuildMode=$(MsixBuildMode) /p:GenerateAppInstallerFile=$(MsixGenerateAppInstaller)
       configuration: $(BuildConfiguration)
       maximumCpuCount: false
 
   - script: copy build.cer WpfCoreApp.Package\AppPackages\WpfCoreApp.Package_$(GitBuildVersionSimple).0_Test\WpfCoreApp.Package_$(GitBuildVersionSimple).0_x86.cer
     displayName: Copy Certificate to versioned dir
+    condition: and(succeeded(), not(eq(variables['ChannelName'], 'Prod-Store')))
 
   - task: PublishPipelineArtifact@0
     inputs:
