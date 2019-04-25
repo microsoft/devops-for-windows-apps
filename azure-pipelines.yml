@@ -30,18 +30,27 @@ jobs:
 
   strategy:
     matrix:
-      Channel_Release:
-        ChannelName: Release
+      Channel_Prod_Web:
+        ChannelName: Prod-Web
         DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/WpfCoreApp
         MsixPackageId: WpfCoreApp.DevOpsDemo
         MsixPublisherId: CN=build
         MsixPackageDisplayName: WpfCoreApp
-      Channel_CI:
-        ChannelName: CI
+        MsixBuildMode: SideLoadOnly
+      Channel_Prod_Store:
+        ChannelName: Prod-Store
+        MsixPackageId: Build.WpfCoreAppSample
+        MsixPublisherId: CN=E40A5878-9BC7-45A3-BBFC-B988EA6795B5
+        MsixPackageDisplayName: WpfCoreApp (Store)
+        MsixBuildMode: CI
+      Channel_CD_Web:
+        ChannelName: CI-Web
         DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/CI
-        MsixPackageId: WpfCoreApp.DevOpsDemo.CI
+        MsixPackageId: WpfCoreApp.DevOpsDemo.CD
         MsixPublisherId: CN=build
-        MsixPackageDisplayName: WpfCoreApp (CI)
+        MsixPackageDisplayName: WpfCoreApp (CD)
+        MsixBuildMode: SideLoadOnly
+
 
   steps:
   - checkout: self
@@ -79,7 +88,7 @@ jobs:
     inputs:
       solution: WpfCoreApp.sln
       platform: x86
-      msbuildArguments: /restore /p:AppInstallerUri=$(DistributionUrl)
+      msbuildArguments: /restore /p:AppInstallerUri=$(DistributionUrl) /p:UapAppxPackageBuildMode=$(MsixBuildMode)
       configuration: $(BuildConfiguration)
       maximumCpuCount: false
 
