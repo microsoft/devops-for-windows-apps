@@ -48,7 +48,7 @@ jobs:
         MsixGenerateAppInstaller: false
       Channel_CD_Web:
         ChannelName: CD-Web
-        DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/CI
+        DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/CD
         MsixPackageId: WpfCoreApp.DevOpsDemo.CD
         MsixPublisherId: CN=build
         MsixPackageDisplayName: WpfCoreApp (CD)
