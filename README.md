@@ -1,11 +1,13 @@
 
-Installer page here: 
+## CI Channel 
+[![Build Status](https://dev.azure.com/devops-for-client-apps/build2019-demo/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Channel_CI)](https://dev.azure.com/devops-for-client-apps/build2019-demo/_build/latest?definitionId=1&branchName=master)
 
-Release: https://build2019devopsdemo.z13.web.core.windows.net/WpfCoreApp
+[![CI](https://img.shields.io/azure-devops/release/devops-for-client-apps/99e907d0-45c4-4065-9d18-a85a42d82d83/1/1.svg?style=flat-square)](https://build2019devopsdemo.z13.web.core.windows.net/CI)
 
-CI: https://build2019devopsdemo.z13.web.core.windows.net/CI
+## Release Channel
+[![Build Status](https://dev.azure.com/devops-for-client-apps/build2019-demo/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Channel_Release)](https://dev.azure.com/devops-for-client-apps/build2019-demo/_build/latest?definitionId=1&branchName=master)
 
-DevOps pipelines here: https://dev.azure.com/devops-for-client-apps/build2019-demo
+[![CI](https://img.shields.io/azure-devops/release/devops-for-client-apps/99e907d0-45c4-4065-9d18-a85a42d82d83/1/9.svg?style=flat-square)](https://build2019devopsdemo.z13.web.core.windows.net/WpfCoreApp)
 
 # Contributing
 
