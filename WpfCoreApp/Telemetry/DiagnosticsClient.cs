@@ -14,23 +14,14 @@ namespace WpfCoreApp.Telemetry
 
         public static void Initialize()
         {
-            var apiKey = System.Configuration.ConfigurationManager.AppSettings["InstrumentationKey"];
+            TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode = Debugger.IsAttached;
+            TelemetryConfiguration.Active.TelemetryInitializers.Add(new AppVersionTelemetryInitializer());
+            TelemetryConfiguration.Active.TelemetryInitializers.Add(new EnvironmentTelemetryInitializer());
 
-            if (!string.IsNullOrEmpty(apiKey) && apiKey != "__AppInsightsKey__")
-            {
-                if (!string.IsNullOrWhiteSpace(apiKey))
-                {
-                    TelemetryConfiguration.Active.InstrumentationKey = apiKey;
-                    TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode = Debugger.IsAttached;
-                    TelemetryConfiguration.Active.TelemetryInitializers.Add(new AppVersionTelemetryInitializer());
-                    TelemetryConfiguration.Active.TelemetryInitializers.Add(new EnvironmentTelemetryInitializer());
-
-                    _initialized = true;
-                    _client = new TelemetryClient();
-                    System.Windows.Application.Current.Startup += Application_Startup;
-                    System.Windows.Application.Current.Exit += Application_Exit;
-                }
-            }
+            _initialized = true;
+            _client = new TelemetryClient();
+            System.Windows.Application.Current.Startup += Application_Startup;
+            System.Windows.Application.Current.Exit += Application_Exit;
         }
 
         private static void Application_Exit(object sender, System.Windows.ExitEventArgs e)
