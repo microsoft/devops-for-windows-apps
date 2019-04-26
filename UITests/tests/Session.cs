@@ -13,7 +13,7 @@ namespace tests
     public class Session
     {
         private const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723";
-        private const string AppId = "WpfCoreApp.DevOpsDemo.CI_px07m07ahrfnt!App";
+        private const string AppId = "WpfCoreApp.DevOpsDemo.CD_px07m07ahrfnt!App";
         protected static WindowsDriver<WindowsElement> session;
         protected static WindowsDriver<WindowsElement> DesktopSession;
         private TestContext testContextInstance;
