@@ -1,4 +1,8 @@
 
+# DevOps for Client Apps (Build 2019 Demo)
+
+This repo contains a sample application to showcase best practices when doing DevOps to deploy/update Windows Desktop applications using MSIX.
+
 ### CD - Web 
 [![Build Status](https://dev.azure.com/devops-for-client-apps/build2019-demo/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Channel_CD_Web)](https://dev.azure.com/devops-for-client-apps/build2019-demo/_build/latest?definitionId=1&branchName=master)
 
@@ -11,7 +15,9 @@
 
 ### Store
 [![Build Status](https://dev.azure.com/devops-for-client-apps/build2019-demo/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Channel_Prod_Store)](https://dev.azure.com/devops-for-client-apps/build2019-demo/_build/latest?definitionId=1&branchName=master)
+<p>
 <img src="https://assets.windowsphone.com/85864462-9c82-451e-9355-a3d5f874397a/English_get-it-from-MS_InvariantCulture_Default.png" width="180" />
+</p>
 
 
 # Contributing
