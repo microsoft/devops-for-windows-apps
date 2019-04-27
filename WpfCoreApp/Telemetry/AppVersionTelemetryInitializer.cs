@@ -15,10 +15,8 @@ namespace WpfCoreApp.Telemetry
 
         public AppVersionTelemetryInitializer()
         {
-            _wpfVersion = typeof(System.Windows.Application).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;            
-            _appVersion = typeof(DiagnosticsClient).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>()
-                                                           .FirstOrDefault(ama => string.Equals(ama.Key, "CloudBuildNumber", StringComparison.OrdinalIgnoreCase))
-                                                           ?.Value;
+            _wpfVersion = typeof(System.Windows.Application).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+            _appVersion = ThisAppInfo.GetPackageVersion();
         }
 
         public void Initialize(ITelemetry telemetry)
