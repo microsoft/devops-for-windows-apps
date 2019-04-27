@@ -31,7 +31,7 @@ namespace tests
             Console.WriteLine("Trying to Find Home Button");
             var button = session.FindElementByAccessibilityId("ButtonShowRuntimeVersionInfo");
             Assert.AreEqual("ControlType.Button", button.TagName);
-            Assert.AreEqual("Show Runtime Version", button.Text);
+            Assert.AreEqual("Show Runtime Info", button.Text);
             button.Click();
             System.Threading.Thread.Sleep(200);
         }
