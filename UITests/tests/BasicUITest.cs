@@ -42,14 +42,11 @@ namespace tests
             Console.WriteLine("Trying to Find Home Button");
             var button = session.FindElementByAccessibilityId("ButtonShowRuntimeVersionInfo");
             Assert.AreEqual("ControlType.Button", button.TagName);
-            Assert.AreEqual("Show Runtime Info", button.Text);
+            Assert.AreEqual("Hide Runtime Info", button.Text);
             button.Click();
             System.Threading.Thread.Sleep(200);
             var labelRuntimeInfo = session.FindElementByAccessibilityId("RuntimeVersionInfo");
             Assert.IsTrue(labelRuntimeInfo.Text.Contains("3.0.0"));
-            Assert.AreEqual("Hide Runtime Info", button.Text);
-            button.Click();
-            System.Threading.Thread.Sleep(200);
             Assert.AreEqual("Show Runtime Info", button.Text);
             button.Click();
             System.Threading.Thread.Sleep(200);
@@ -57,6 +54,9 @@ namespace tests
             button.Click();
             System.Threading.Thread.Sleep(200);
             Assert.AreEqual("Show Runtime Info", button.Text);
+            button.Click();
+            System.Threading.Thread.Sleep(200);
+            Assert.AreEqual("Hide Runtime Info", button.Text);
         }
 
     }
