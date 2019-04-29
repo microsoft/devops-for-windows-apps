@@ -44,6 +44,7 @@ namespace WpfCoreApp
 
         private async void ButtonCheckForUpdates_Click(object sender, RoutedEventArgs e)
         {
+            DiagnosticsClient.TrackEvent("CheckForUpdates");
             if (WindowsVersionHelper.HasPackageIdentity)
             {
                 var p = Package.Current;
@@ -52,9 +53,9 @@ namespace WpfCoreApp
                 if (updateInfo.Availability==PackageUpdateAvailability.Available ||
                     updateInfo.Availability == PackageUpdateAvailability.Required)
                 {
-                    var pm = new PackageManager();
-                    var res = await pm.UpdatePackageAsync(p.GetAppInstallerInfo().Uri, null, DeploymentOptions.ForceUpdateFromAnyVersion);
-                    UpdateInfo.Text = res.ErrorText;
+                    UpdateInfo.Text += " trying to apply update from: " + p.GetAppInstallerInfo().Uri.ToString();
+                    var res = await CheckForUpdates(p);
+                    UpdateInfo.Text = res;
                 }
             }
             else
@@ -62,6 +63,23 @@ namespace WpfCoreApp
                 UpdateInfo.Text = "App not packaged, updates not available.";
             }
             
+        }
+
+        private static async Task<string> CheckForUpdates(Package p)
+        {
+            string result = string.Empty;
+            try
+            {
+                var pm = new PackageManager();
+                var res = await pm.UpdatePackageAsync(p.GetAppInstallerInfo().Uri, null, DeploymentOptions.ForceUpdateFromAnyVersion);
+                result = res.ErrorText;
+            }
+            catch (Exception ex)
+            {
+                result = ex.Message;
+                DiagnosticsClient.TrackTrace(ex.ToString());
+            }
+            return result;
         }
     }
 }
