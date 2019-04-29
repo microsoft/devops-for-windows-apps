@@ -49,6 +49,13 @@ namespace WpfCoreApp
                 var p = Package.Current;
                 var updateInfo = await p.CheckUpdateAvailabilityAsync();
                 UpdateInfo.Text = updateInfo.Availability.ToString();
+                if (updateInfo.Availability==PackageUpdateAvailability.Available ||
+                    updateInfo.Availability == PackageUpdateAvailability.Required)
+                {
+                    var pm = new PackageManager();
+                    var res = await pm.UpdatePackageAsync(p.GetAppInstallerInfo().Uri, null, DeploymentOptions.ForceUpdateFromAnyVersion);
+                    UpdateInfo.Text = res.ErrorText;
+                }
             }
             else
             {
