@@ -9,16 +9,16 @@
         Title="MainWindow" Height="450" Width="1200">
     <Window.Resources>
         <Style TargetType="TextBlock">
-            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontSize" Value="22" />
             <Setter Property="Margin" Value="5" />
         </Style>
         <Style TargetType="Button">
-            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontSize" Value="22" />
             <Setter Property="Margin" Value="5" />
         </Style>
         <Style TargetType="Label">
             <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontSize" Value="22" />
         </Style>
     </Window.Resources>
     <Grid>
