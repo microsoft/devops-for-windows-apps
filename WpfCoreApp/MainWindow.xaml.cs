@@ -1,7 +1,10 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using OSVersionHelper;
-
+using Windows.ApplicationModel;
+using Windows.Management.Deployment;
 using WpfCoreApp.Telemetry;
 
 namespace WpfCoreApp
@@ -37,6 +40,21 @@ namespace WpfCoreApp
                 DiagnosticsClient.TrackEvent("ClickShowRuntimeInfo");
                 ButtonShowRuntimeVersionInfo.Content = "Show Runtime Info";
             }
+        }
+
+        private async void ButtonCheckForUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            if (WindowsVersionHelper.HasPackageIdentity)
+            {
+                var p = Package.Current;
+                var updateInfo = await p.CheckUpdateAvailabilityAsync();
+                UpdateInfo.Text = updateInfo.Availability.ToString();
+            }
+            else
+            {
+                UpdateInfo.Text = "Not packaged, can't check for updates";
+            }
+            
         }
     }
 }
