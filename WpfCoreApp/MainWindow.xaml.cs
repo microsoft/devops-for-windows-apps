@@ -59,7 +59,7 @@ namespace WpfCoreApp
             }
             else
             {
-                UpdateInfo.Text = "Not packaged, can't check for updates";
+                UpdateInfo.Text = "App not packaged, updates not available.";
             }
             
         }
