@@ -18,10 +18,5 @@ namespace WpfCoreApp
         {
             DiagnosticsClient.Initialize();
         }
-
-        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        {
-            DiagnosticsClient.TrackEvent("AppException", new Dictionary<string, string> { { "Exception", e.Exception.ToString() } });
-        }
     }
 }

@@ -22,6 +22,12 @@ namespace WpfCoreApp.Telemetry
             _client = new TelemetryClient();
             System.Windows.Application.Current.Startup += Application_Startup;
             System.Windows.Application.Current.Exit += Application_Exit;
+            System.Windows.Application.Current.DispatcherUnhandledException += DispatcherUnhandledException;
+        }
+
+        private static void DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            TrackException(e.Exception);
         }
 
         private static void Application_Exit(object sender, System.Windows.ExitEventArgs e)
@@ -49,7 +55,7 @@ namespace WpfCoreApp.Telemetry
             _client.TrackTrace(evt);
         }
 
-        public static void Notify(Exception exception, IDictionary<string, string> properties = null, IDictionary<string, double> metrics = null)
+        public static void TrackException(Exception exception, IDictionary<string, string> properties = null, IDictionary<string, double> metrics = null)
         {
             if (!_initialized) return;
             _client.TrackException(exception, properties, metrics);
