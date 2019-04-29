@@ -14,7 +14,7 @@
     <PackageReference Include="AppInsights.WindowsDesktop" Version="2.10.37-preview" />
     <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.138" PrivateAssets="all" />
     <PackageReference Include="OSVersionHelper" Version="1.0.10" />
-    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.17763.141-preview" />
+    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.17763.1000-preview" />
   </ItemGroup>
 
   <ItemGroup>
