@@ -35,6 +35,16 @@ namespace WpfCoreApp
             return "Not Packaged";
         }
 
+        internal static string GetPackageChannel()
+        {
+            if(WindowsVersionHelper.HasPackageIdentity)
+            {
+                return Package.Current.Id.Name.Substring(Package.Current.Id.Name.LastIndexOf('.') + 1);
+            }
+
+            return null;
+        }
+
         internal static string GetDotNetInfo()
         {
             var runTimeDir = new FileInfo(typeof(string).Assembly.Location);

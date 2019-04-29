@@ -7,7 +7,7 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="WpfCoreApp.DevOpsDemo.local"
+    Name="WpfCoreApp.DevOpsDemo.Local"
     Publisher="CN=build"
     Version="1.0.0.0" />
 
