@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -71,7 +72,8 @@ namespace WpfCoreApp
             try
             {
                 var pm = new PackageManager();
-                var res = await pm.UpdatePackageAsync(p.GetAppInstallerInfo().Uri, null, DeploymentOptions.ForceUpdateFromAnyVersion);
+                var tmp = p.GetAppInstallerInfo().Uri;
+                var res = await pm.UpdatePackageAsync(tmp, Enumerable.Empty<Uri>(), DeploymentOptions.ForceUpdateFromAnyVersion);
                 result = res.ErrorText;
             }
             catch (Exception ex)
