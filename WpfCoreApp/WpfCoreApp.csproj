@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AppInsights.WindowsDesktop" Version="2.10.41-preview" />
+    <PackageReference Include="AppInsights.WindowsDesktop" Version="2.10.42-preview" />
     <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.138" PrivateAssets="all" />
     <PackageReference Include="OSVersionHelper" Version="1.0.10" />
     <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.17763.1000-preview" />
