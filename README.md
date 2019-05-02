@@ -1,5 +1,5 @@
 
-# DevOps for Client Apps (Build 2019 Demo)
+# DevOps for Windows Desktop Apps
 
 This repo contains a sample application to showcase best practices when doing DevOps to deploy/update Windows Desktop applications using MSIX.
 
