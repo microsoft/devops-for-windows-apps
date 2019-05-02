@@ -40,7 +40,7 @@ jobs:
         MsixGenerateAppInstaller: true
       Channel_Prod_Web:
         ChannelName: Prod-Web
-        DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/Prod
+        DistributionUrl: https://wpfcoreapp.z5.web.core.windows.net/Prod
         MsixPackageId: WpfCoreApp.DevOpsDemo
         MsixPublisherId: CN=build
         MsixPackageDisplayName: WpfCoreApp (Prod)

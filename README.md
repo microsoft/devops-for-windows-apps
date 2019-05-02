@@ -11,7 +11,7 @@ This repo contains a sample application to showcase best practices when doing De
 ### PROD - Web
 [![Build Status](https://dev.azure.com/devops-for-client-apps/WpfCoreApp/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Build%20Channel_Prod_Web)](https://dev.azure.com/devops-for-client-apps/WpfCoreApp/_build/latest?definitionId=1&branchName=master)
 
-[![PROD](https://img.shields.io/azure-devops/release/devops-for-client-apps/99e907d0-45c4-4065-9d18-a85a42d82d83/1/9.svg?style=flat-square)](https://wpfcoreapp.z5.web.core.windows.net//Prod)
+[![PROD](https://img.shields.io/azure-devops/release/devops-for-client-apps/99e907d0-45c4-4065-9d18-a85a42d82d83/1/9.svg?style=flat-square)](https://wpfcoreapp.z5.web.core.windows.net/Prod)
 
 ### Store
 [![Build Status](https://dev.azure.com/devops-for-client-apps/WpfCoreApp/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Build%20Channel_CD_Web)](https://dev.azure.com/devops-for-client-apps/WpfCoreApp/_build/latest?definitionId=1&branchName=master)
