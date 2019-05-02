@@ -32,7 +32,7 @@ jobs:
     matrix:
       Channel_CD_Web:
         ChannelName: CD-Web
-        DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/CD
+        DistributionUrl: https://wpfcoreapp.azurewebsites.net/CD
         MsixPackageId: WpfCoreApp.DevOpsDemo.CD
         MsixPublisherId: CN=build
         MsixPackageDisplayName: WpfCoreApp (CD)
