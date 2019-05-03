@@ -14,11 +14,12 @@ namespace WpfCoreApp.Telemetry
     {
         public void Initialize(ITelemetry telemetry)
         {
-            telemetry.Context.GlobalProperties["Environment"] = ThisAppInfo.GetDisplayName();
-            // Always default to Development if we're in the debugger
+            telemetry.Context.GlobalProperties["Environment"] = ThisAppInfo.GetPackageChannel() ?? "Local";
+
+            // Always default to Local if we're in the debugger
             if (Debugger.IsAttached)
             {
-                telemetry.Context.GlobalProperties["Environment"] += " debugging";
+                telemetry.Context.GlobalProperties["Environment"] = "Local";
             }       
         }
     }

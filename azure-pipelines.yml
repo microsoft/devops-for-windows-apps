@@ -32,7 +32,7 @@ jobs:
     matrix:
       Channel_CD_Web:
         ChannelName: CD-Web
-        DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/CD
+        DistributionUrl: https://wpfcoreapp.azurewebsites.net/CD
         MsixPackageId: WpfCoreApp.DevOpsDemo.CD
         MsixPublisherId: CN=build
         MsixPackageDisplayName: WpfCoreApp (CD)
@@ -40,7 +40,7 @@ jobs:
         MsixGenerateAppInstaller: true
       Channel_Prod_Web:
         ChannelName: Prod-Web
-        DistributionUrl: https://build2019devopsdemo.z13.web.core.windows.net/Prod
+        DistributionUrl: https://wpfcoreapp.z5.web.core.windows.net/Prod
         MsixPackageId: WpfCoreApp.DevOpsDemo
         MsixPublisherId: CN=build
         MsixPackageDisplayName: WpfCoreApp (Prod)
@@ -95,7 +95,7 @@ jobs:
       configuration: $(BuildConfiguration)
       maximumCpuCount: false
 
-  - script: copy build.cer WpfCoreApp.Package\AppPackages\WpfCoreApp.Package_$(GitBuildVersionSimple).0_Test\WpfCoreApp.Package_$(GitBuildVersionSimple).0_x86.cer
+  - script: copy build.cer WpfCoreApp.Package\AppPackages\WpfCoreApp.Package_$(GitBuildVersionSimple).0_x86_Test\WpfCoreApp.Package_$(GitBuildVersionSimple).0_x86.cer
     displayName: Copy Certificate to versioned dir
     condition: and(succeeded(), not(eq(variables['ChannelName'], 'Prod-Store')))
 

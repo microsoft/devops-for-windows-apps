@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4F4B9354-5FBF-4184-AB29-2EF3503C6F0B}"
 	ProjectSection(SolutionItems) = preProject
 		EnableScreenCast.testsettings = EnableScreenCast.testsettings
+		UITests.runsettings = UITests.runsettings
 	EndProjectSection
 EndProject
 Global
