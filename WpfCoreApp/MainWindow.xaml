@@ -37,7 +37,7 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" Grid.ColumnSpan="2" Background="Lime">
-            <TextBlock Text="DevOps Demo" HorizontalAlignment="Center" Foreground="Black"/>
+            <TextBlock Text="DevOps Demo" HorizontalAlignment="Center" Foreground="Blue"/>
         </Border>
         
         <Label Grid.Row="1" Content="Version" Target="{Binding ElementName=versionText}" VerticalAlignment="Center" />
@@ -56,8 +56,7 @@
         <TextBlock Grid.Row="5" x:Name="installedFrom" Grid.Column="1" VerticalAlignment="Center" />
         
         <Button x:Name="ButtonShowRuntimeVersionInfo" Grid.Row="6" Click="Button_Click" Height="40" VerticalAlignment="Top" Width="210">Show Runtime Info</Button>
-        <TextBlock x:Name="RuntimeVersionInfo" Grid.Row="6" Grid.Column="1"
-                   TextWrapping="WrapWithOverflow" />
+        <TextBlock x:Name="RuntimeVersionInfo" Grid.Row="6" Grid.Column="1" TextWrapping="WrapWithOverflow" />
         
     </Grid>
 </Window>
