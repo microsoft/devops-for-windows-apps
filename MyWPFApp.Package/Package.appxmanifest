@@ -9,7 +9,7 @@
   <Identity
     Name="MyWPFApp.DevOpsDemo.Local"
     Publisher="CN=build"
-    Version="1.0.0.0" />
+    Version="0.0.1.0" />
 
   <Properties>
     <DisplayName>MyWPFApp (Local)</DisplayName>
@@ -43,8 +43,7 @@
             <uap:ShowOn Tile="square310x310Logo"/>
           </uap:ShowNameOnTiles>
         </uap:DefaultTile>
-        <uap:SplashScreen Image="Images\SplashScreen.png"/>
-        <uap:LockScreen BadgeLogo="Images\BadgeLogo.png" Notification="badge"/>
+        
       </uap:VisualElements>
     </Application>
   </Applications>
