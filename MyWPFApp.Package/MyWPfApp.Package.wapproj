@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\*.png" />
+    <None Include="MyWPFApp.Package_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyWPFApp\MyWPFApp.csproj" />
