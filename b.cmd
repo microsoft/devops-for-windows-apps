@@ -1,0 +1,1 @@
+msbuild /restore  /p:UapAppxPackageBuildMode=SideloadOnly /p:GenerateAppInstallerFile=true MyWpfApp.sln /p:Configuration=Release;Platform="Any CPU"
