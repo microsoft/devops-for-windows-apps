@@ -52,7 +52,7 @@ namespace tests
             Assert.AreEqual("Hide Runtime Info", button.Text);
             
             var labelRuntimeInfo = session.FindElementByAccessibilityId("RuntimeVersionInfo");
-            Assert.IsTrue(labelRuntimeInfo.Text.Contains("4.8.0"));
+            Assert.IsTrue(labelRuntimeInfo.Text.Contains("4.8"));
             
             button.Click();
             System.Threading.Thread.Sleep(200);
