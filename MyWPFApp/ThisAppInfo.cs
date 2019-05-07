@@ -18,12 +18,17 @@ namespace MyWPFApp
             {
                 return Package.Current.DisplayName;
             }
-            return "not packaged";
+            return "Not packaged";
         }
 
         internal static string GetThisAssemblyVersion()
         {
             return typeof(MainWindow).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+        }
+
+        internal static string GetInstallLocation()
+        {
+            return Assembly.GetExecutingAssembly().Location;
         }
 
         internal static string GetPackageVersion()
@@ -32,7 +37,7 @@ namespace MyWPFApp
             {
                 return $"{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}.{Package.Current.Id.Version.Revision}";
             }
-            return "Not Packaged";
+            return "Not packaged";
         }
 
         internal static string GetPackageChannel()
@@ -67,8 +72,10 @@ namespace MyWPFApp
         internal static string GetAppInstallerUri()
         {
             string result;
-            if (OSVersionHelper.WindowsVersionHelper.HasPackageIdentity &&
-                ApiInformation.IsMethodPresent("Windows.ApplicationModel.Package", "GetAppInstallerInfo"))
+
+            if (!WindowsVersionHelper.HasPackageIdentity) return "Not packaged";
+
+                if (ApiInformation.IsMethodPresent("Windows.ApplicationModel.Package", "GetAppInstallerInfo"))
             {
                 var aiUri = GetAppInstallerInfoUri(Package.Current);
                 if (aiUri != null)
@@ -82,7 +89,7 @@ namespace MyWPFApp
             }
             else
             {
-                result = "not available";
+                result = "Not Available";
             }
 
             return result;

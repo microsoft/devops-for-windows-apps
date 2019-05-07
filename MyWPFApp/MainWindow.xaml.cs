@@ -15,12 +15,11 @@ namespace MyWPFApp
         {
             InitializeComponent();
 
-            versionText.Text = ThisAppInfo.GetDisplayName() + ThisAppInfo.GetThisAssemblyVersion();
-            inPackage.Text = WindowsVersionHelper.HasPackageIdentity.ToString();
-            deploymentType.Text = ThisAppInfo.GetDotNetInfo();
+            packageName.Text = ThisAppInfo.GetDisplayName();
+            assemblyVersion.Text = ThisAppInfo.GetThisAssemblyVersion();
             packageVersion.Text = ThisAppInfo.GetPackageVersion();
             installedFrom.Text = ThisAppInfo.GetAppInstallerUri();
-
+            installLocation.Text = ThisAppInfo.GetInstallLocation();
             DiagnosticsClient.TrackPageView(nameof(MainWindow));
         }
         private void Button_Click(object sender, RoutedEventArgs e)
