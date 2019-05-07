@@ -82,7 +82,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ApplicationInsights.config" />
+    <Content Include="ApplicationInsights.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\Settings.settings" />
   </ItemGroup>
   <ItemGroup>
