@@ -44,6 +44,7 @@ namespace tests
             Assert.AreEqual("ControlType.Button", button.TagName);
             Assert.AreEqual("Hide Runtime Info", button.Text);
             button.Click();
+
             System.Threading.Thread.Sleep(200);
             Assert.AreEqual("Show Runtime Info", button.Text);
             button.Click();
@@ -52,7 +53,7 @@ namespace tests
             Assert.AreEqual("Hide Runtime Info", button.Text);
             
             var labelRuntimeInfo = session.FindElementByAccessibilityId("RuntimeVersionInfo");
-            Assert.IsTrue(labelRuntimeInfo.Text.Contains("4.8"));
+            Assert.IsTrue(labelRuntimeInfo.Text.Contains("4.7"));
             
             button.Click();
             System.Threading.Thread.Sleep(200);
