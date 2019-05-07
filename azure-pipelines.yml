@@ -2,13 +2,21 @@ trigger:
   branches:
     include:
     - master
-     - rel/*
-   
+    - rel/*
+  paths:
+    exclude:
+    - '**/*.md'
+    - 'UITests/*'
+
 pr:
   branches:
     include:
     - master
     - rel/*
+  paths:
+    exclude:
+    - '**/*.md'
+    - 'UITests/*'
 
 variables:
   BuildConfiguration: Release
