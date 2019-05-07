@@ -53,7 +53,7 @@
     <!-- Generate architecture specific packages. Values: x86|x64|arm|arm64 -->
     <!-- App installer file base url -->
     <AppInstallerUri>https://mywpfapp.z5.web.core.windows.net/CD</AppInstallerUri>
-    <AppxBundle>Always</AppxBundle>
+    <AppxBundle>Never</AppxBundle>
     <AppxBundlePlatforms>neutral</AppxBundlePlatforms>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
@@ -66,11 +66,11 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\*.png" />
-    <None Include="MyWPFApp.Package_TemporaryKey.pfx" />
+    <ProjectReference Include="..\MyWPFApp\MyWPFApp.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MyWPFApp\MyWPFApp.csproj" />
+    <Content Include="Images\*" />
+    <Content Include="Package.appinstaller" />
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 </Project>
