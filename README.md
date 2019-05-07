@@ -3,18 +3,20 @@
 
 This repo contains a sample application to showcase best practices when doing DevOps to deploy/update Windows Desktop applications using MSIX.
 
+Azure Dev Ops Pipelines are available at: https://dev.azure.com/devops-for-client-apps/MyWPFApp
+
 ### CD - Web 
-[![Build Status](https://dev.azure.com/devops-for-client-apps/WpfCoreApp/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Build%20Channel_CD_Web)](https://dev.azure.com/devops-for-client-apps/WpfCoreApp/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://dev.azure.com/devops-for-client-apps/MyWPFApp/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Build%20Channel_CD_Web)](https://dev.azure.com/devops-for-client-apps/WpfCoreApp/_build/latest?definitionId=1&branchName=master)
 
 [![CD](https://img.shields.io/azure-devops/release/devops-for-client-apps/99e907d0-45c4-4065-9d18-a85a42d82d83/1/1.svg?style=flat-square)](https://mywpfapp.azurewebsites.net/CD/)
 
 ### PROD - Web
-[![Build Status](https://dev.azure.com/devops-for-client-apps/WpfCoreApp/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Build%20Channel_Prod_Web)](https://dev.azure.com/devops-for-client-apps/WpfCoreApp/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://dev.azure.com/devops-for-client-apps/MyWPFApp/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Build%20Channel_Prod_Web)](https://dev.azure.com/devops-for-client-apps/WpfCoreApp/_build/latest?definitionId=1&branchName=master)
 
 [![PROD](https://img.shields.io/azure-devops/release/devops-for-client-apps/99e907d0-45c4-4065-9d18-a85a42d82d83/1/9.svg?style=flat-square)](https://mywpfapp.z5.web.core.windows.net/Prod)
 
 ### Store
-[![Build Status](https://dev.azure.com/devops-for-client-apps/WpfCoreApp/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Build%20Channel_CD_Web)](https://dev.azure.com/devops-for-client-apps/WpfCoreApp/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://dev.azure.com/devops-for-client-apps/MyWPFApp/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Build%20Channel_CD_Web)](https://dev.azure.com/devops-for-client-apps/WpfCoreApp/_build/latest?definitionId=1&branchName=master)
 <p>
 <img src="https://assets.windowsphone.com/85864462-9c82-451e-9355-a3d5f874397a/English_get-it-from-MS_InvariantCulture_Default.png" width="180" />
 </p>
