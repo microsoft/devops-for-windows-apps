@@ -2,21 +2,13 @@ trigger:
   branches:
     include:
     - master
-    - rel/*
-  paths:
-    exclude:
-    - '**/*.md'
-    - 'UITests/*'
-
+     - rel/*
+   
 pr:
   branches:
     include:
     - master
     - rel/*
-  paths:
-    exclude:
-    - '**/*.md'
-    - 'UITests/*'
 
 variables:
   BuildConfiguration: Release
@@ -25,61 +17,59 @@ variables:
 jobs:
 - job: Build
   pool:
-    name: Dev16Custom
+    name: Hosted Windows 2019 with VS2019
     demands: msbuild
 
   strategy:
     matrix:
       Channel_CD_Web:
         ChannelName: CD-Web
-        DistributionUrl: https://wpfcoreapp.azurewebsites.net/CD
-        MsixPackageId: WpfCoreApp.DevOpsDemo.CD
+        DistributionUrl: https://mywpfapp.azurewebsites.net/CD
+        MsixPackageId: MyWPFApp.DevOpsDemo.CD
         MsixPublisherId: CN=build
-        MsixPackageDisplayName: WpfCoreApp (CD)
+        MsixPackageDisplayName: MyWPFApp (CD)
         MsixBuildMode: SideLoadOnly
         MsixGenerateAppInstaller: true
       Channel_Prod_Web:
         ChannelName: Prod-Web
-        DistributionUrl: https://wpfcoreapp.z5.web.core.windows.net/Prod
-        MsixPackageId: WpfCoreApp.DevOpsDemo
+        DistributionUrl: https://mywpfapp.z5.web.core.windows.net/Prod
+        MsixPackageId: MyWPFApp.DevOpsDemo
         MsixPublisherId: CN=build
-        MsixPackageDisplayName: WpfCoreApp (Prod)
+        MsixPackageDisplayName: MyWPFApp (Prod)
         MsixBuildMode: SideLoadOnly
         MsixGenerateAppInstaller: true
       Channel_Prod_Store:
         ChannelName: Prod-Store
         DistributionUrl: https://not/used
-        MsixPackageId: Build.WpfCoreAppSample
+        MsixPackageId: MyWPFApp
         MsixPublisherId: CN=E40A5878-9BC7-45A3-BBFC-B988EA6795B5
-        MsixPackageDisplayName: WpfCoreApp (Store)
+        MsixPackageDisplayName: MyWPFApp (Store)
         MsixBuildMode: CI
         MsixGenerateAppInstaller: false
 
   steps:
-  - checkout: self
-    clean: true
-
+  
   - script: nbgv cloud -c
     displayName: Set Version
 
   - powershell: |
       # Update appxmanifest. This must be done before build.
       # Set the per-channel values into the appxmanifest, replacing the checked-in values
-      [xml]$manifest= get-content ".\WpfCoreApp.Package\Package.appxmanifest"
+      [xml]$manifest= get-content ".\MyWPFApp.Package\Package.appxmanifest"
       $manifest.Package.Identity.Version = "$(GitBuildVersionSimple).0"
       $manifest.Package.Identity.Name = "$(MsixPackageId)"
       $manifest.Package.Identity.Publisher = "$(MsixPublisherId)"
       $manifest.Package.Properties.DisplayName = "$(MsixPackageDisplayName)"
       $manifest.Package.Applications.Application.VisualElements.DisplayName = "$(MsixPackageDisplayName)"
-      $manifest.save(".\WpfCoreApp.Package\Package.appxmanifest")
+      $manifest.save(".\MyWPFApp.Package\Package.appxmanifest")
 
     displayName: Update manifest version
 
   - powershell: |
       # Update App Insights instrumentation key
-      [xml]$doc = Get-Content ".\WpfCoreApp\ApplicationInsights.config"
+      [xml]$doc = Get-Content ".\MyWPFApp\ApplicationInsights.config"
       $doc.ApplicationInsights.InstrumentationKey = "$(AppInsightsKey)"
-      $doc.save(".\WpfCoreApp\ApplicationInsights.config")
+      $doc.save(".\MyWPFApp\ApplicationInsights.config")
 
     displayName: Set AppInsights Config
     env:
@@ -89,18 +79,18 @@ jobs:
   - task: MSBuild@1
     displayName: Build for $(BuildConfiguration)
     inputs:
-      solution: WpfCoreApp.sln
+      solution: MyWPFApp.sln
       platform: x86
       msbuildArguments: /restore /p:AppInstallerUri=$(DistributionUrl) /p:UapAppxPackageBuildMode=$(MsixBuildMode) /p:GenerateAppInstallerFile=$(MsixGenerateAppInstaller)
       configuration: $(BuildConfiguration)
       maximumCpuCount: false
 
-  - script: copy build.cer WpfCoreApp.Package\AppPackages\WpfCoreApp.Package_$(GitBuildVersionSimple).0_x86_Test\WpfCoreApp.Package_$(GitBuildVersionSimple).0_x86.cer
+  - script: copy build.cer MyWPFApp.Package\AppPackages\MyWPFApp.Package_$(GitBuildVersionSimple).0_x86_Test\MyWPFApp.Package_$(GitBuildVersionSimple).0_x86.cer
     displayName: Copy Certificate to versioned dir
     condition: and(succeeded(), not(eq(variables['ChannelName'], 'Prod-Store')))
 
   - task: PublishPipelineArtifact@0
     inputs:
       artifactName: $(ChannelName)
-      targetPath: WpfCoreApp.Package/AppPackages
+      targetPath: MyWPFApp.Package/AppPackages
 
