@@ -91,7 +91,7 @@ jobs:
       configuration: $(BuildConfiguration)
       maximumCpuCount: false
 
-  - script: copy build.cer MyWPFApp.Package\AppPackages\MyWPFApp.Package_$(GitBuildVersionSimple).0_x86_Test\MyWPFApp.Package_$(GitBuildVersionSimple).0_x86.cer
+  - script: copy build.cer MyWPFApp.Package\AppPackages\MyWPFApp.Package_$(GitBuildVersionSimple).0_Test\MyWPFApp.Package_$(GitBuildVersionSimple).0.cer
     displayName: Copy Certificate to versioned dir
     condition: and(succeeded(), not(eq(variables['ChannelName'], 'Prod-Store')))
 
