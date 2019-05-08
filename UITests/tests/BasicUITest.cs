@@ -53,7 +53,7 @@ namespace tests
             Assert.AreEqual("Hide Runtime Info", button.Text);
             
             var labelRuntimeInfo = session.FindElementByAccessibilityId("RuntimeVersionInfo");
-            Assert.IsTrue(labelRuntimeInfo.Text.Contains("4.7"));
+            Assert.IsTrue(labelRuntimeInfo.Text.Contains("4.8"), "FX 4.8 not found");
             
             button.Click();
             System.Threading.Thread.Sleep(200);
