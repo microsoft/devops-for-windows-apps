@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MyWPFApp"
         mc:Ignorable="d"
         AutomationProperties.AutomationId="MyWPFAppMainWindow"
-        Title="MainWindow" Height="450" Width="1200">
+        Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="FontSize" Value="22" />
@@ -46,7 +46,7 @@
         <Label Grid.Row="2" Content="Package Version" Target="{Binding ElementName=packageVersion}" VerticalAlignment="Center" />
         <TextBlock Grid.Row="2" x:Name="packageVersion" Grid.Column="1" VerticalAlignment="Center" />
 
-        <Label Grid.Row="3" Content="Installed from:" Target="{Binding ElementName=installedFrom}" VerticalAlignment="Center" />
+        <Label Grid.Row="3" Content="Installed from" Target="{Binding ElementName=installedFrom}" VerticalAlignment="Center" />
         <TextBlock Grid.Row="3" x:Name="installedFrom" Grid.Column="1" VerticalAlignment="Center" />
 
         <Label Grid.Row="4" Content="AssemblyVersion" Target="{Binding ElementName=assemblyVersion}" VerticalAlignment="Center" />
