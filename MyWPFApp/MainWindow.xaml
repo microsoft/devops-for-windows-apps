@@ -36,8 +36,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Grid.ColumnSpan="2" Background="Yello">
-            <TextBlock Text="DevOps Demo" HorizontalAlignment="Center" Foreground="Purple"/>
+        <Border Grid.Row="0" Grid.ColumnSpan="2" Background="Yellow">
+            <TextBlock Text="DevOps Demo" Foreground="Blue"/>
         </Border>
 
         <Label Grid.Row="1" Content="Package Name" Target="{Binding ElementName=packageName}" VerticalAlignment="Center" />
