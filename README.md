@@ -1,9 +1,10 @@
 
 # DevOps for Windows Desktop Apps
 
-This repo contains a sample application to showcase best practices when doing DevOps to deploy/update Windows Desktop applications using MSIX.
+This repo contains a sample application to showcase best practices when doing DevOps to deploy/update Windows Desktop applications using MSIX. We used this content at //Build 2019 within the session [DevOps for applications running on Windows](https://mybuild.techcommunity.microsoft.com/sessions/77012)
 
 Azure Dev Ops Pipelines are available at: https://dev.azure.com/devops-for-client-apps/MyWPFApp
+
 
 ### CD - Web 
 [![Build Status](https://dev.azure.com/devops-for-client-apps/MyWPFApp/_apis/build/status/CI-build?branchName=master&jobName=Build&configuration=Build%20Channel_CD_Web)](https://dev.azure.com/devops-for-client-apps/WpfCoreApp/_build/latest?definitionId=1&branchName=master)
