@@ -36,8 +36,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Grid.ColumnSpan="2" Background="Purple">
-            <TextBlock Text="DevOps Demo" Foreground="White"/>
+        <Border Grid.Row="0" Grid.ColumnSpan="2" Background="Beige">
+            <TextBlock Text="DevOps Demo" Foreground="Black"/>
         </Border>
 
         <Label Grid.Row="1" Content="Package Name" Target="{Binding ElementName=packageName}" VerticalAlignment="Center" />
@@ -53,7 +53,7 @@
         <TextBlock Grid.Row="4" x:Name="assemblyVersion" Grid.Column="1" VerticalAlignment="Center" />
 
         <Label Grid.Row="5" Content="Install Location" Target="{Binding ElementName=installLocation}" VerticalAlignment="Top" />
-        <TextBlock Grid.Row="5" x:Name="installLocation" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center"  />
+        <TextBlock Grid.Row="5" x:Name="installLocation" Grid.Column="1" TextWrapping="NoWrap" VerticalAlignment="Center"  />
 
 
         <Button x:Name="ButtonShowRuntimeVersionInfo" Grid.Row="6" Click="Button_Click" Height="40" VerticalAlignment="Top" Width="210">Show Runtime Info</Button>
