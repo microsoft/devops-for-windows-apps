@@ -5,16 +5,16 @@ This repo contains a sample application to showcase best practices when doing De
 
 Azure Dev Ops Pipelines are available at: https://dev.azure.com/devops-for-client-apps/MyWPFApp
 
-### CI 
+### CI Build
 [![Build Status](https://dev.azure.com/devops-for-client-apps/MyWPFApp/_apis/build/status/CI-build?branchName=master)](https://dev.azure.com/devops-for-client-apps/MyWPFApp/_build/latest?definitionId=1&branchName=master)
 
-### CD - Web 
+### CD - QA (WebApp) 
 [![CD](https://img.shields.io/azure-devops/release/devops-for-client-apps/99e907d0-45c4-4065-9d18-a85a42d82d83/1/1.svg?style=flat-square)](https://mywpfapp.azurewebsites.net/CD/)
 
-### PROD - Web
+### CD - PROD (Blob)
 [![PROD](https://img.shields.io/azure-devops/release/devops-for-client-apps/99e907d0-45c4-4065-9d18-a85a42d82d83/1/9.svg?style=flat-square)](https://mywpfapp.z5.web.core.windows.net/Prod)
 
-### Store
+### CD - PROD (Store)
 [![Store](https://vsrm.dev.azure.com/devops-for-client-apps/_apis/public/Release/badge/99e907d0-45c4-4065-9d18-a85a42d82d83/1/10)](https://dev.azure.com/devops-for-client-apps/MyWPFApp/_releaseProgress?_a=release-pipeline-progress&releaseId=186)
 
 # Contributing
