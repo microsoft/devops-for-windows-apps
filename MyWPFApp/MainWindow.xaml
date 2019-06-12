@@ -36,7 +36,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Grid.ColumnSpan="2" Background="DarkCyan">
+        <Border Grid.Row="0" Grid.ColumnSpan="2" Background="YellowGreen">
             <TextBlock Text="DevOps Demo" Foreground="Beige"/>
         </Border>
 
