@@ -25,8 +25,7 @@ variables:
 jobs:
 - job: Build
   pool:
-    name: Hosted Windows 2019 with VS2019
-    demands: msbuild
+    vmImage: windows-2019
 
   strategy:
     matrix:
@@ -56,14 +55,20 @@ jobs:
         MsixGenerateAppInstaller: false
 
   steps:
-  - task: DotNetCoreCLI@2  
+  - task: UseDotNet@2
+    displayName: 'Use .NET Core SDK 3.x'
+    inputs:
+      version: 3.x
+      includePreviewVersions: true
+
+  - task: DotNetCoreCLI@2
     inputs:
       command: custom
       custom: tool
-      arguments: install -g nbgv
+      arguments: install --tool-path . nbgv
     displayName: Install NBGV tool
 
-  - script: nbgv cloud -c
+  - script: nbgv cloud -c -a
     displayName: Set Version
 
   - powershell: |
