@@ -5,9 +5,9 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using WpfCoreApp.Telemetry;
+using MyWPFApp.Telemetry;
 
-namespace WpfCoreApp
+namespace MyWPFApp
 {
     /// <summary>
     /// Interaction logic for App.xaml

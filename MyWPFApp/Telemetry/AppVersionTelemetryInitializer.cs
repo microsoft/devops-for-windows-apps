@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
 
-namespace WpfCoreApp.Telemetry
+namespace MyWPFApp.Telemetry
 {
     internal class AppVersionTelemetryInitializer : ITelemetryInitializer
     {

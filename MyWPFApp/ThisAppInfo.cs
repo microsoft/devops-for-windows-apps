@@ -8,7 +8,7 @@ using OSVersionHelper;
 using Windows.ApplicationModel;
 using Windows.Foundation.Metadata;
 
-namespace WpfCoreApp
+namespace MyWPFApp
 {
     internal class ThisAppInfo
     {
@@ -18,12 +18,17 @@ namespace WpfCoreApp
             {
                 return Package.Current.DisplayName;
             }
-            return "WpfCoreApp (dev)";
+            return "Not packaged";
         }
 
         internal static string GetThisAssemblyVersion()
         {
             return typeof(MainWindow).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+        }
+
+        internal static string GetInstallLocation()
+        {
+            return Assembly.GetExecutingAssembly().Location;
         }
 
         internal static string GetPackageVersion()
@@ -32,7 +37,7 @@ namespace WpfCoreApp
             {
                 return $"{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}.{Package.Current.Id.Version.Revision}";
             }
-            return "Not Packaged";
+            return "Not packaged";
         }
 
         internal static string GetPackageChannel()
@@ -51,7 +56,7 @@ namespace WpfCoreApp
             var entryDir = new FileInfo(Assembly.GetEntryAssembly().Location);
             var IsSelfContaied = runTimeDir.DirectoryName == entryDir.DirectoryName;
 
-            var result = ".NET Core - ";
+            var result = ".NET Framework - ";
             if (IsSelfContaied)
             {
                 result += "Self Contained Deployment";
@@ -67,8 +72,10 @@ namespace WpfCoreApp
         internal static string GetAppInstallerUri()
         {
             string result;
-            if (OSVersionHelper.WindowsVersionHelper.HasPackageIdentity &&
-                ApiInformation.IsMethodPresent("Windows.ApplicationModel.Package", "GetAppInstallerInfo"))
+
+            if (!WindowsVersionHelper.HasPackageIdentity) return "Not packaged";
+
+                if (ApiInformation.IsMethodPresent("Windows.ApplicationModel.Package", "GetAppInstallerInfo"))
             {
                 var aiUri = GetAppInstallerInfoUri(Package.Current);
                 if (aiUri != null)
@@ -82,7 +89,7 @@ namespace WpfCoreApp
             }
             else
             {
-                result = "not available";
+                result = "Not Available";
             }
 
             return result;

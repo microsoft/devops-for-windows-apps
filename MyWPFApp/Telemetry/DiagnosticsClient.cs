@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 
-namespace WpfCoreApp.Telemetry
+namespace MyWPFApp.Telemetry
 {
     public static class DiagnosticsClient
     {
