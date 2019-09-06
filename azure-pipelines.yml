@@ -56,6 +56,12 @@ jobs:
         MsixGenerateAppInstaller: false
 
   steps:
+  - task: UseDotNet@2
+    displayName: 'Use .NET Core SDK 3.x'
+    inputs:
+      version: 3.x
+      includePreviewVersions: true
+
   - task: DotNetCoreCLI@2  
     inputs:
       command: custom
