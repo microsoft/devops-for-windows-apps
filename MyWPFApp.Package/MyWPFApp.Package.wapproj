@@ -55,7 +55,6 @@
     <!-- App installer file base url -->
     <AppInstallerUri>https://mywpfapp.z5.web.core.windows.net/CD</AppInstallerUri>
     <AppxBundle>Never</AppxBundle>
-    <AppxBundlePlatforms>x86</AppxBundlePlatforms>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <EntryPointProjectUniqueName>..\MyWPFApp\MyWPFApp.csproj</EntryPointProjectUniqueName>
     <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
