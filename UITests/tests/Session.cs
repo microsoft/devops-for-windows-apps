@@ -13,7 +13,7 @@ namespace tests
     public class Session
     {
         private const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723";
-        private const string AppId = "MyWPFApp.DevOpsDemo.CD_px07m07ahrfnt!App";
+        private const string AppId = "WpfCoreApp.DevOpsDemo.CD_px07m07ahrfnt!App";
         protected static WindowsDriver<WindowsElement> session;
         protected static WindowsDriver<WindowsElement> DesktopSession;
         private TestContext testContextInstance;
@@ -41,18 +41,18 @@ namespace tests
                 Thread.Sleep(hostedAgentTimer);
                 appCapabilities.SetCapability("app", "Root");
                 DesktopSession = new WindowsDriver<WindowsElement>(new Uri(WindowsApplicationDriverUrl), appCapabilities);
-                Console.WriteLine("Attaching to MyWPFApp Main Window");
+                Console.WriteLine("Attaching to WPFCoreApp Main Window");
                 try
                 {
                     //Trying to launch app (500 error expected in WAD v1.1)
-                    var mainWindow1 = DesktopSession.FindElementByAccessibilityId("MyWPFAppMainWindow");
+                    var mainWindow1 = DesktopSession.FindElementByAccessibilityId("WPFCoreAppMainWindow");
                 }
                 catch
                 {
                     Console.WriteLine("Switching to Desktop session.");
 
                 }
-                var mainWindow = DesktopSession.FindElementByAccessibilityId("MyWPFAppMainWindow");
+                var mainWindow = DesktopSession.FindElementByAccessibilityId("WPFCoreAppMainWindow");
                 Console.WriteLine("Getting Window Handle");
                 var mainWindowHandle = mainWindow.GetAttribute("NativeWindowHandle");
                 mainWindowHandle = (int.Parse(mainWindowHandle)).ToString("x"); // Convert to Hex

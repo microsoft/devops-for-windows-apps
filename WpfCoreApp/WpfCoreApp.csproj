@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>win.ico</ApplicationIcon>
+    <Platforms>AnyCPU;x86</Platforms>
+    <RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
+    <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AppInsights.WindowsDesktop" Version="2.10.42-preview" />
+    <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.138" PrivateAssets="all" />
+    <PackageReference Include="OSVersionHelper" Version="1.0.10" />
+    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.17763.1000-preview" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ApplicationInsights.config" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
