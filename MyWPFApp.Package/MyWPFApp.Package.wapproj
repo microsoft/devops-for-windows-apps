@@ -53,13 +53,14 @@
     <!-- Generate architecture specific packages. Values: x86|x64|arm|arm64 -->
     <AppxBundlePlatforms>x86</AppxBundlePlatforms>
     <!-- App installer file base url -->
-    <AppInstallerUri>https://build2019devopsdemo.z13.web.core.windows.net/CI</AppInstallerUri>
+    <AppInstallerUri>https://mywpfapp.z5.web.core.windows.net/CD</AppInstallerUri>
     <AppxBundle>Never</AppxBundle>
     <AppxBundlePlatforms>x86</AppxBundlePlatforms>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-    <EntryPointProjectUniqueName>..\WpfCoreApp\WpfCoreApp.csproj</EntryPointProjectUniqueName>
+    <EntryPointProjectUniqueName>..\MyWPFApp\MyWPFApp.csproj</EntryPointProjectUniqueName>
     <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -71,7 +72,7 @@
     <Content Include="Package.appinstaller" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WpfCoreApp\WpfCoreApp.csproj">
+    <ProjectReference Include="..\MyWPFApp\MyWPFApp.csproj">
       <DesktopBridgeSelfContained>True</DesktopBridgeSelfContained>
       <DesktopBridgeIdentifier>win-x86</DesktopBridgeIdentifier>
       <Properties>SelfContained=%(DesktopBridgeSelfContained);RuntimeIdentifier=%(DesktopBridgeIdentifier)</Properties>

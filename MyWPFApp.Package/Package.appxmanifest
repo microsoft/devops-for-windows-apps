@@ -7,12 +7,12 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="WpfCoreApp.DevOpsDemo.Local"
+    Name="MyWPFApp.DevOpsDemo.Local"
     Publisher="CN=build"
-    Version="1.0.0.0" />
+    Version="0.0.1.0" />
 
   <Properties>
-    <DisplayName>WpfCoreApp (Local)</DisplayName>
+    <DisplayName>MyWPFApp (Local)</DisplayName>
     <PublisherDisplayName>Build</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
@@ -30,12 +30,12 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="WpfCoreApp (Local)"
-        Description="WpfCoreApp Demo App"
+        DisplayName="MyWPFApp (Local)"
+        Description="MyWPFApp Demo App"
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"
         Square44x44Logo="Images\Square44x44Logo.png">
-        <uap:DefaultTile ShortName="WPFCoreApp" Square71x71Logo="Images\SmallTile.png" Wide310x150Logo="Images\WideTile.png" Square310x310Logo="Images\LargeTile.png">
+        <uap:DefaultTile ShortName="MyWPFApp" Square71x71Logo="Images\SmallTile.png" Wide310x150Logo="Images\WideTile.png" Square310x310Logo="Images\LargeTile.png">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo"/>
             <uap:ShowOn Tile="wide310x150Logo"/>
