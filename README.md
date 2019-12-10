@@ -1,21 +1,39 @@
 
-# DevOps for Windows Desktop Apps
+# DevOps for Windows Desktop Apps using GitHub Actions
 
-This repo contains a sample application to showcase best practices when doing DevOps to deploy/update Windows Desktop applications using MSIX. We used this content at //Build 2019 within the session [DevOps for applications running on Windows](https://mybuild.techcommunity.microsoft.com/sessions/77012)
+## Create a CI/CD pipeline for a Wpf app built on Net Core
 
-Azure Dev Ops Pipelines are available at: https://dev.azure.com/devops-for-client-apps/MyWPFApp
+This repo contains a sample application to demonstrate how to create a CI/CD pipeline for a Wpf application built on Net Core and packaged with MSIX using GitHub Actions. 
 
-### CI Build
-[![Build Status](https://dev.azure.com/devops-for-client-apps/MyWPFApp/_apis/build/status/CI-build?branchName=master)](https://dev.azure.com/devops-for-client-apps/MyWPFApp/_build/latest?definitionId=1&branchName=master)
+With GitHub Actions, you can automate your software workflows.  You can build, test, and deploy your code within GitHub.  Documentation for GitHub Actions can be found here: https://github.com/features/actions
 
-### CD - QA (WebApp) 
-[![CD](https://img.shields.io/azure-devops/release/devops-for-client-apps/99e907d0-45c4-4065-9d18-a85a42d82d83/1/1.svg?style=flat-square)](https://mywpfapp.azurewebsites.net/CD/)
+Workflows are defined in YAML files in the .github/workflows folder.  In this project, we have two workflow definitions:
+* ContinuousIntegration.yml
+* ContinuousDelivery.yml
 
-### CD - PROD (Blob)
-[![PROD](https://img.shields.io/azure-devops/release/devops-for-client-apps/99e907d0-45c4-4065-9d18-a85a42d82d83/1/9.svg?style=flat-square)](https://mywpfapp.z5.web.core.windows.net/Prod)
+## ContinuousIntegration.yml
 
-### CD - PROD (Store)
-[![Store](https://vsrm.dev.azure.com/devops-for-client-apps/_apis/public/Release/badge/99e907d0-45c4-4065-9d18-a85a42d82d83/1/10)](https://dev.azure.com/devops-for-client-apps/MyWPFApp/_releaseProgress?_a=release-pipeline-progress&releaseId=186)
+The continuous integration workflow gets triggered anytime a developer pushes code to the repo or creates a pull request.  The GitHub build agent calls a GitHub action to add the MSBuild.exe to the PATH, then builds the Wpf Net Core application.  From there, the agent creates an MSIX app package and uploads it as a [build artifact](https://github.com/marketplace/actions/upload-artifact), along with an .appinstaller file.
+
+Developers have the option to download the artifact to test the build or upload the artifact to a website or file share for app distribution.  One incredibly powerful, yet simple, method of distribution is through the use of GitHub pages.  For a working example that distributes MyWpfApp, see [edwardskrod/devops-for-desktop-app-distribution](https://github.com/edwardskrod/devops-for-desktop-apps-distribution)
+
+## ContinuousDelivery.yml
+
+The continuous delivery workflow gets triggered anytime a developer pushes code to the repo that has a git [tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging).   To add a simple release tag to a commit, run the following commands:
+* git tag 1.0.0.0
+* git push --tags
+
+The first step adds the tag "1.0.0.0" while the second step pushes the branch and tag to the repo.
+
+Similar to the way the continuous integration workflow works, in this workflow, the GitHub build agent builds the Wpf Net Core application and creates a MSIX package.  From there, the agent archives the AppPackages folder, then creates a Release with the specified git release tag.  The archive is uploaded to the release as an asset for storage or distribution.
+
+## CI / CD
+### branch/master push
+
+![](https://github.com/edwardskrod/devops-for-windows-apps/workflows/Wpf%20Continuous%20Integration/badge.svg)
+
+![](https://github.com/edwardskrod/devops-for-windows-apps/workflows/Wpf%20Continuous%20Delivery/badge.svg)
+
 
 # Contributing
 
