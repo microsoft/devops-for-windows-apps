@@ -60,7 +60,8 @@
     <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
-    <PackageCertificateKeyFile>MyWPFApp.Package_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>4F4CA2B6B8E5CE50A8C93BA373F214B7AB88E816</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>EdwardSkrodDeveloper.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -69,7 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\*" />
-    <None Include="MyWPFApp.Package_TemporaryKey.pfx" />
+    <None Include="EdwardSkrodDeveloper.pfx" />
     <Content Include="Package.appinstaller" />
   </ItemGroup>
   <ItemGroup>
