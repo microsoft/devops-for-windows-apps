@@ -12,7 +12,7 @@ Workflows are defined in YAML files in the .github/workflows folder.  In this pr
 
 The continuous integration workflow gets triggered anytime a developer pushes code to the repo or creates a pull request.  The GitHub build agent calls a GitHub action to add the MSBuild.exe to the PATH, then builds the Wpf Net Core application.  From there, the agent creates an MSIX app package and uploads it as a [build artifact](https://github.com/marketplace/actions/upload-artifact), along with an .appinstaller file.
 
-Developers have the option to download the artifact to test the build or upload the artifact to a website or file share for app distribution.  One incredibly powerful, yet simple, method of distribution is through the use of GitHub pages.  For a working example that distributes MyWpfApp, see [edwardskrod/devops-for-desktop-app-distribution](https://github.com/edwardskrod/devops-for-desktop-apps-distribution)
+Developers have the option to download the artifact to test the build or upload the artifact to a website or file share for app distribution.  One incredibly powerful, yet simple, method of distribution is through the use of GitHub pages.  For a working example that distributes MyWpfApp, see [edwardskrod/devops-for-windows-app-distribution](https://github.com/edwardskrod/devops-for-windows-apps-distribution)
 
 
 ## ContinuousDelivery.yml
