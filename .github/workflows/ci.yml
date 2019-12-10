@@ -1,0 +1,42 @@
+name:  Wpf Continuous Integration
+
+# Trigger on push and pull_request
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    # Add MsBuild to the PATH. This is not an official Microsoft action:  https://github.com/topics/msbuild-action
+    - name: Setup MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+
+    # Build the Wpf Net Core application
+    - name: Build MyWpfApp
+      run: msbuild MyWpfApp\MyWpfApp.csproj /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
+      env:
+        Configuration: Release
+        RuntimeIdentifier: win-x86
+        TargetPlatform: x86
+
+    # Build the Windows Application Packaging Project and create the Msix
+    # The AppInstaller Uri is defined in the .wapproj.
+    - name: Build MyWpfApp.Packaging 
+      run: msbuild MyWpfApp.Packaging\MyWpfApp.Packaging.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode 
+      env:  
+        BuildMode: SideLoadOnly
+        Configuration: Release
+        MsixPath: MyWpfApp.Packaging\AppPackages\
+        TargetPlatform: x86
+
+    # Upload the Msix package: https://github.com/marketplace/actions/upload-artifact
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: Msix Package
+        path: MyWpfApp.Packaging\AppPackages\
+        
