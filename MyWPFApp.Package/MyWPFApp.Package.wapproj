@@ -39,7 +39,7 @@
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <!-- True/false. Sign the output packages. Default is true. -->
-    <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <!-- Values: StoreUpload, CI, SideLoadOnly. Default is StoreUpload.
          StoreUpload = appxupload + sideload
          CI = appxupload
@@ -60,6 +60,7 @@
     <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <PackageCertificateKeyFile>MyWPFApp.Package_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -68,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\*" />
+    <None Include="MyWPFApp.Package_TemporaryKey.pfx" />
     <Content Include="Package.appinstaller" />
   </ItemGroup>
   <ItemGroup>

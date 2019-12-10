@@ -26,7 +26,7 @@ jobs:
     # Build the Windows Application Packaging Project and create the Msix
     # The AppInstaller Uri is defined in the .wapproj.
     - name: Build MyWpfApp.Package 
-      run: msbuild MyWpfApp.Package\MyWpfApp.Package.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode 
+      run: msbuild MyWpfApp.Package\MyWpfApp.Package.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
       env:  
         BuildMode: SideLoadOnly
         Configuration: Release
