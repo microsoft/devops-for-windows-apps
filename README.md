@@ -1,32 +1,40 @@
+# Create a CI/CD pipeline for a Wpf app built on Net Core
 
-# DevOps for Windows Desktop Apps
+This repo contains a sample application to demonstrate how to create a CI/CD pipeline for a Wpf application built on Net Core and packaged with MSIX using GitHub Actions. 
 
-This repo contains a sample application to showcase best practices when doing DevOps to deploy/update Windows Desktop applications using MSIX. We used this content at //Build 2019 within the session [DevOps for applications running on Windows](https://mybuild.techcommunity.microsoft.com/sessions/77012)
+With GitHub Actions, you can automate your software workflows.  You can build, test, and deploy your code within GitHub.  Documentation for GitHub Actions can be found here: https://github.com/features/actions
 
-Azure Dev Ops Pipelines are available at: https://dev.azure.com/devops-for-client-apps/MyWPFApp
+Workflows are defined in YAML files in the .github/workflows folder.  In this project, we have two workflow definitions:
+* ContinuousIntegration.yml
+* ContinuousDelivery.yml
 
-### CI Build
-[![Build Status](https://dev.azure.com/devops-for-client-apps/MyWPFApp/_apis/build/status/CI-build?branchName=master)](https://dev.azure.com/devops-for-client-apps/MyWPFApp/_build/latest?definitionId=1&branchName=master)
+## ContinuousIntegration.yml
 
-### CD - QA (WebApp) 
-[![CD](https://img.shields.io/azure-devops/release/devops-for-client-apps/99e907d0-45c4-4065-9d18-a85a42d82d83/1/1.svg?style=flat-square)](https://mywpfapp.azurewebsites.net/CD/)
+The continuous integration workflow gets triggered anytime a developer pushes code to the repo or creates a pull request.  The GitHub build agent calls a GitHub action to add the MSBuild.exe to the PATH, then builds the Wpf Net Core application.  From there, the agent creates an MSIX app package and uploads it as a [build artifact](https://github.com/marketplace/actions/upload-artifact), along with an .appinstaller file.
 
-### CD - PROD (Blob)
-[![PROD](https://img.shields.io/azure-devops/release/devops-for-client-apps/99e907d0-45c4-4065-9d18-a85a42d82d83/1/9.svg?style=flat-square)](https://mywpfapp.z5.web.core.windows.net/Prod)
+Developers have the option to download the artifact to test the build or upload the artifact to a website or file share for app distribution.  One incredibly powerful, yet simple, method of distribution is through the use of GitHub pages.  For a working example that distributes MyWpfApp, see [edwardskrod/devops-for-desktop-app-distribution](https://github.com/edwardskrod/devops-for-desktop-apps-distribution)
 
-### CD - PROD (Store)
-[![Store](https://vsrm.dev.azure.com/devops-for-client-apps/_apis/public/Release/badge/99e907d0-45c4-4065-9d18-a85a42d82d83/1/10)](https://dev.azure.com/devops-for-client-apps/MyWPFApp/_releaseProgress?_a=release-pipeline-progress&releaseId=186)
 
-# Contributing
+## ContinuousDelivery.yml
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.microsoft.com.
+The continuous delivery workflow gets triggered anytime a developer pushes code to the repo that has a git [tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging).   To add a simple release tag to a commit, run the following commands:
+* git tag 1.0.0.0
+* git push --tags
 
-When you submit a pull request, a CLA-bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., label, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+The first step adds the tag "1.0.0.0" while the second step pushes the branch and tag to the repo.
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+Similar to the way the continuous integration workflow works, in this workflow, the GitHub build agent builds the Wpf Net Core application and creates a MSIX package.  From there, the agent archives the AppPackages folder, then creates a Release with the specified git release tag.  The archive is uploaded to the release as an asset for storage or distribution.
+
+## CI / CD
+### branch/master push
+
+![](https://github.com/edwardskrod/devops-for-desktop-apps/workflows/WPF%20Continuous%20Integration/badge.svg)
+
+![](https://github.com/edwardskrod/devops-for-desktop-apps/workflows/WPF%20Continuous%20Delivery/badge.svg)
+
+# Contributions
+This project welcomes contributions and suggestions. Most contributions require you to agree to a Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us the rights to use your contribution. For details, visit https://cla.microsoft.com.
+
+When you submit a pull request, a CLA-bot will automatically determine whether you need to provide a CLA and decorate the PR appropriately (e.g., label, comment). Simply follow the instructions provided by the bot. You will only need to do this once across all repos using our CLA.
+
+This project has adopted the Microsoft Open Source Code of Conduct. For more information see the Code of Conduct FAQ or contact opencode@microsoft.com with any additional questions or comments.
