@@ -25,12 +25,12 @@ jobs:
 
     # Build the Windows Application Packaging Project and create the Msix
     # The AppInstaller Uri is defined in the .wapproj.
-    - name: Build MyWpfApp.Packaging 
-      run: msbuild MyWpfApp.Packaging\MyWpfApp.Packaging.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode 
+    - name: Build MyWpfApp.Package 
+      run: msbuild MyWpfApp.Package\MyWpfApp.Package.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
       env:  
         BuildMode: SideLoadOnly
         Configuration: Release
-        MsixPath: MyWpfApp.Packaging\AppPackages\
+        MsixPath: MyWpfApp.Package\AppPackages\
         TargetPlatform: x86
 
     # Upload the Msix package: https://github.com/marketplace/actions/upload-artifact
@@ -38,5 +38,5 @@ jobs:
       uses: actions/upload-artifact@master
       with:
         name: Msix Package
-        path: MyWpfApp.Packaging\AppPackages\
+        path: MyWpfApp.Package\AppPackages\
         
