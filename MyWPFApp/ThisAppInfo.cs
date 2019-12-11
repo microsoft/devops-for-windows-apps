@@ -1,18 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
+
 using OSVersionHelper;
+
 using Windows.ApplicationModel;
 using Windows.Foundation.Metadata;
 
 namespace MyWPFApp
 {
-    internal class ThisAppInfo
+    public class ThisAppInfo
     {
-        internal static string GetDisplayName()
+        public static string GetDisplayName()
         {
             if (WindowsVersionHelper.HasPackageIdentity)
             {
@@ -69,7 +69,7 @@ namespace MyWPFApp
             return result;
         }
 
-        internal static string GetAppInstallerUri()
+        public static string GetAppInstallerUri()
         {
             string result;
 
