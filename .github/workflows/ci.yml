@@ -16,18 +16,24 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    # Add MsBuild to the PATH. This is not an official Microsoft action:  https://github.com/topics/msbuild-action
+    # Add  MsBuild to the PATH: https://github.com/topics/msbuild-action
     - name: Setup MSBuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
 
-    # Build the solution and create the Msix
-    - name: Build MyWpfApp.sln
-      run: msbuild MyWpfApp.sln /restore /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificatePassword=$env:PackageCertificatePassword
+    # Build the Wpf Net Core application
+    - name: Build MyWpfApp
+      run: msbuild MyWpfApp\MyWpfApp.csproj /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
+      env:
+        Configuration: Release
+        RuntimeIdentifier: win-${{ matrix.targetplatform }}
+        TargetPlatform: ${{ matrix.targetplatform }}
+
+    # Build the Windows Application Packaging Project
+    - name: Build MyWpfApp.Package 
+      run: msbuild MyWpfApp.Package\MyWpfApp.Package.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
       env:  
         BuildMode: SideLoadOnly
         Configuration: Release
-        MsixPath: MyWpfApp.Package\AppPackages\
-        PackageCertificatePassword: ${{secrets.Pfx_Key}}
         TargetPlatform: ${{ matrix.targetplatform }}
 
     # Upload the Msix package: https://github.com/marketplace/actions/upload-artifact
