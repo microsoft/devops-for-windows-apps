@@ -4,6 +4,21 @@ name:  Wpf Continuous Integration
 on: [push, pull_request]
 
 jobs:
+
+  test:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.0.100
+
+  - name: Test with dotnet
+      run: dotnet test --configuration Release
+
   build:
 
     runs-on: windows-latest
@@ -15,18 +30,9 @@ jobs:
     - name: Setup MSBuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
 
-    # Build the Wpf Net Core application
-    - name: Build MyWpfApp
-      run: msbuild MyWpfApp\MyWpfApp.csproj /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
-      env:
-        Configuration: Release
-        RuntimeIdentifier: win-x86
-        TargetPlatform: x86
-
-    # Build the Windows Application Packaging Project and create the Msix
-    # The AppInstaller Uri is defined in the .wapproj.
-    - name: Build MyWpfApp.Package 
-      run: msbuild MyWpfApp.Package\MyWpfApp.Package.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
+    # Build the solution and create the Msix
+    - name: Build MyWpfApp.sln
+      run: msbuild MyWpfApp.sln /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
       env:  
         BuildMode: SideLoadOnly
         Configuration: Release
@@ -39,4 +45,3 @@ jobs:
       with:
         name: Msix Package
         path: MyWpfApp.Package\AppPackages\
-        
