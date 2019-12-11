@@ -14,7 +14,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.0.1
+        dotnet-version: 3.0.101
 
     - name: Test with dotnet
       run: dotnet test --configuration Release
@@ -32,7 +32,7 @@ jobs:
 
     # Build the solution and create the Msix
     - name: Build MyWpfApp.sln
-      run: msbuild MyWpfApp.sln /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
+      run: msbuild MyWpfApp.sln /restore /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
       env:  
         BuildMode: SideLoadOnly
         Configuration: Release
