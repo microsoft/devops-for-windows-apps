@@ -14,7 +14,13 @@ jobs:
     runs-on: windows-latest
 
     steps:
+    - name: Checkout
     - uses: actions/checkout@v1
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.100
 
     # Add  MsBuild to the PATH: https://github.com/topics/msbuild-action
     - name: Setup MSBuild.exe
@@ -27,6 +33,18 @@ jobs:
         Configuration: Release
         RuntimeIdentifier: win-${{ matrix.targetplatform }}
         TargetPlatform: ${{ matrix.targetplatform }}
+
+    # Build the Test Project
+    - name: Build MyWpfApp.Tests
+      run: msbuild MyWpfApp.Tests\MyWpfApp.Tests.csproj /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
+      env:
+        Configuration: Release
+        RuntimeIdentifier: win-${{ matrix.targetplatform }}
+        TargetPlatform: ${{ matrix.targetplatform }}
+
+    # Test
+    - name: Execute Unit Tests
+      run: dotnet test MyWpfApp.Tests\MyWpfApp.Tests.csproj
 
     # Build the Windows Application Packaging Project
     - name: Build MyWpfApp.Package 
