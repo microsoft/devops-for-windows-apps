@@ -9,11 +9,11 @@ jobs:
 
     strategy:
       matrix:
-        channel: [Channel_Dev, Channel_Test]
+        channel: [Channel_Dev, Channel_Prod]
         include:
           # includes the following variables for the matrix leg matching Channel_Dev
           - channel: Channel_Dev
-            ChannelName: Dev-Web
+            ChannelName: Dev
             Configuration: Debug
             DistributionUrl: https://edwardskrod.github.io/devops-for-windows-apps-distribution-dev
             MsixPackageId: MyWPFApp.DevOpsDemo.Dev
@@ -23,7 +23,7 @@ jobs:
           # includes the following variables for the matrix leg matching Channel_Test
           - channel: Channel_Prod
             Configuration: Release
-            ChannelName: Prod-Web
+            ChannelName: Prod
             DistributionUrl: https://edwardskrod.github.io/devops-for-windows-apps-distribution-prod
             MsixPackageId: MyWPFApp.DevOpsDemo.Prod
             MsixPublisherId: CN=EdwardSkrod
@@ -64,8 +64,9 @@ jobs:
 
     # Build the Windows Application Packaging project
     - name: Build MyWpfApp.Package 
-      run: msbuild MyWpfApp.Package\MyWpfApp.Package.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
-      env:  
+      run: msbuild MyWpfApp.Package\MyWpfApp.Package.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
+      env:
+        AppInstallerUri: ${{matrix.DistributionUrl}}
         BuildMode: SideLoadOnly
         Configuration: ${{matrix.Configuration}}
         TargetPlatform: x86
