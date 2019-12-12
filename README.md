@@ -12,6 +12,8 @@ Workflows are defined in YAML files in the .github/workflows folder.  In this pr
 
 ## ci.yml
 
+Build, test, package, and save .msix artifacts for multiple configurations of the 'Local' channel.
+
 The continuous integration workflow gets triggered anytime a developer pushes code to the repo.  The GitHub build agent calls a GitHub action to add the MSBuild.exe to the PATH, then executes unit tests by calling "dotnet test MyWpfApp.Tests.csproj".  In order to prevent a known error, the workflow cleans the solution then builds the Wpf Net Core application with MsBuild.  From there, the agent creates an MSIX app package and uploads it as a [build artifact](https://github.com/marketplace/actions/upload-artifact), along with an .appinstaller file, allowing developers to deploy and test the app.
 
 With GitHub Actions, we are able to target multiple platforms by setting the build matrix for x86 and x64, for example.  See the article [Workflow syntax for GitHub Actions](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions) for more information.
@@ -22,6 +24,8 @@ To see distribution websites for the Local channel, please navigate to the follo
 * [edwardskrod/devops-for-windows-app-distribution-local](https://github.com/edwardskrod/devops-for-windows-apps-distribution-local)
 
 ## cd.yml
+
+Build, package, and create a GitHub release for 'Dev' and 'Prod' channels.
 
 The continuous delivery workflow allows us to build, package and distribute our code for multiple channels such as 'Production' and 'Development.'   The workflow gets triggered anytime a developer pushes code to the repo that has a git [tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging).   To add a release tag to a commit, run the following commands:
 * git tag 1.0.0.0
