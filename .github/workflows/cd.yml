@@ -1,10 +1,7 @@
 name:  Wpf Continuous Delivery
 
 # Trigger on push with git tag
-on: 
-  push:
-    tags:
-      - '*'
+on: [push]
 
 jobs:
 
