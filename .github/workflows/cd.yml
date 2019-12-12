@@ -1,7 +1,10 @@
 name:  Wpf Continuous Delivery
 
 # Trigger on push
-on: [push]
+on: 
+  push:
+    tags:
+      - '*'
 
 jobs:
 
