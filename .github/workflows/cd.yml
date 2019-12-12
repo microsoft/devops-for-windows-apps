@@ -58,7 +58,7 @@ jobs:
     - name: Build MyWpfApp
       run: msbuild MyWpfApp\MyWpfApp.csproj /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
       env:
-        Configuration: ${{matrix.channel.Configuration}}
+        Configuration: ${{matrix.Configuration}}
         RuntimeIdentifier: win-x86
         TargetPlatform: x86
 
@@ -67,7 +67,7 @@ jobs:
       run: msbuild MyWpfApp.Package\MyWpfApp.Package.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
       env:  
         BuildMode: SideLoadOnly
-        Configuration: ${{matrix.channel.Configuration}}
+        Configuration: ${{matrix.Configuration}}
         TargetPlatform: x86
 
     # Archive the package
@@ -81,8 +81,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ github.ref }}.${{matrix.channel.ChannelName}}
-        release_name:  ${{ github.ref }}.${{matrix.channel.ChannelName}}
+        tag_name: ${{ github.ref }}.${{matrix.ChannelName}}
+        release_name:  ${{ github.ref }}.${{matrix.ChannelName}}
         draft: false
         prerelease: false
 
