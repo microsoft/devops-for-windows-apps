@@ -12,13 +12,53 @@ jobs:
 
     strategy:
       matrix:
-        targetplatform: [x86, x64]
+        channel: [Channel_Dev, Channel_Test]
+        include:
+          # includes the following variables for the matrix leg matching Channel_Dev
+          - channel:Channel_Dev
+            ChannelName: Dev-Web
+            DistributionUrl: https://edwardskrod.github.io/devops-for-windows-apps-distribution-dev
+            MsixPackageId: MyWPFApp.DevOpsDemo.Dev
+            MsixPublisherId: CN=EdwardSkrod
+            MsixPackageDisplayName: MyWPFApp (Dev)
+
+          # includes the following variables for the matrix leg matching Channel_Test
+          - channel:Channel_Prod
+            ChannelName: Prod-Web
+            DistributionUrl: https://edwardskrod.github.io/devops-for-windows-apps-distribution-prod
+            MsixPackageId: MyWPFApp.DevOpsDemo.Prod
+            MsixPublisherId: CN=EdwardSkrod
+            MsixPackageDisplayName: MyWPFApp (Prod)
 
     runs-on: windows-latest
 
     steps:
     - name: Checkout
       uses: actions/checkout@v1
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.100
+
+    # Install the NerdBank.GitVersioning Tool: https://github.com/AArnott/Nerdbank.GitVersioning/blob/master/doc/nbgv-cli.md
+    - name:  Install nbgv
+      run: dotnet tool install -g nbgv
+
+    # Set the version with nbgv
+    - name:  Set the version
+      run: nbgv cloud -c -a
+
+    # Update the appxmanifest before build by setting the per-channel values set in the matrix.
+    - name: Update manifest version
+    - run: |
+      [xml]$manifest= get-content ".\MyWPFApp.Package\Package.appxmanifest"
+      $manifest.Package.Identity.Version = "$(env:GitBuildVersionSimple).0"
+      $manifest.Package.Identity.Name = "${{channel.MsixPackageId}}"
+      $manifest.Package.Identity.Publisher = "${{channel.MsixPublisherId}}"
+      $manifest.Package.Properties.DisplayName = "${{channel.MsixPackageDisplayName}}"
+      $manifest.Package.Applications.Application.VisualElements.DisplayName = "${{channel.MsixPackageDisplayName}}"
+      $manifest.save(".\MyWPFApp.Package\Package.appxmanifest")
 
     # Add  MsBuild to the PATH: https://github.com/topics/msbuild-action
     - name: Setup MSBuild.exe
