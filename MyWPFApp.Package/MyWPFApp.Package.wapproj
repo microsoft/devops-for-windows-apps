@@ -53,7 +53,7 @@
     <!-- Generate architecture specific packages. Values: x86|x64|arm|arm64 -->
     <AppxBundlePlatforms>x86</AppxBundlePlatforms>
     <!-- App installer file base url -->
-    <AppInstallerUri>https://edwardskrod.github.io/devops-for-windows-apps-distribution-dev</AppInstallerUri>
+    <AppInstallerUri>https://edwardskrod.github.io/devops-for-windows-apps-distribution-local</AppInstallerUri>
     <AppxBundle>Never</AppxBundle>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <EntryPointProjectUniqueName>..\MyWPFApp\MyWPFApp.csproj</EntryPointProjectUniqueName>
