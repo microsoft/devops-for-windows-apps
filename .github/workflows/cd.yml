@@ -73,7 +73,7 @@ jobs:
 
     # Archive the package
     - name: Create archive
-      run: Compress-Archive -Path MyWpfApp.Packaging\AppPackages\* -DestinationPath MyWpfApp.Packaging\AppPackages\Archive.zip
+      run: Compress-Archive -Path MyWpfApp.Package\AppPackages\* -DestinationPath MyWpfApp.Package\AppPackages\Archive.zip
 
     # Create the release:  https://github.com/actions/create-release
     - name: Create release
@@ -95,6 +95,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}  # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: MyWpfApp.Packaging\AppPackages\Archive.zip
+        asset_path: MyWpfApp.Package\AppPackages\Archive.zip
         asset_name: Archive.zip
         asset_content_type: application/zip
