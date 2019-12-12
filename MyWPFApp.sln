@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4F26147B-A031-40ED-9CA1-A765A6997816}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		.github\workflows\cd.yml = .github\workflows\cd.yml
 		.github\workflows\ci.yml = .github\workflows\ci.yml
 		global.json = global.json
 		README.md = README.md
@@ -16,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "MyWPFApp.Package", "MyWPFApp.Package\MyWPFApp.Package.wapproj", "{0536B61A-90CF-428D-B4F8-CF011B3A0830}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWPFApp.Tests", "MyWpfApp.Tests\MyWPFApp.Tests.csproj", "{203E0C07-10FC-450B-8D92-F6AA50167946}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyWPFApp.Tests", "MyWpfApp.Tests\MyWPFApp.Tests.csproj", "{203E0C07-10FC-450B-8D92-F6AA50167946}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
