@@ -1,7 +1,7 @@
 name:  Wpf Continuous Integration
 
-# Trigger on push and pull_request
-on: [push, pull_request]
+# Trigger on push
+on: [push]
 
 jobs:
 
