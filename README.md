@@ -16,7 +16,10 @@ The continuous integration workflow gets triggered anytime a developer pushes co
 
 With GitHub Actions, we are able to target multiple platforms by setting the build matrix for x86 and x64, for example.  See the article [Workflow syntax for GitHub Actions](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions) for more information.
 
-The CI pipeline uses the Package Identity Name that is defined in the Package.appxmanifest in the Windows Application Packaging project, currently set to MyWPFApp (Local).  Developers have the option to download the artifact to test the build or upload the artifact to a website or file share for app distribution.  One incredibly powerful, yet simple, method of distribution is through the use of GitHub pages.  For a working example that distributes MyWpfApp, see [edwardskrod/devops-for-windows-app-distribution-local](https://github.com/edwardskrod/devops-for-windows-apps-distribution-local)
+The CI pipeline uses the Package Identity Name that is defined in the Package.appxmanifest in the Windows Application Packaging project, currently set to MyWPFApp (Local).  Developers have the option to download the artifact to test the build or upload the artifact to a website or file share for app distribution.  One incredibly powerful, yet simple, method of distribution is through the use of GitHub pages.  
+
+To see distribution websites for the Local channel, please navigate to the following:
+* [edwardskrod/devops-for-windows-app-distribution-local](https://github.com/edwardskrod/devops-for-windows-apps-distribution-local)
 
 ## cd.yml
 
