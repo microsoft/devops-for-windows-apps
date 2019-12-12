@@ -34,19 +34,11 @@ jobs:
         RuntimeIdentifier: win-${{ matrix.targetplatform }}
         TargetPlatform: ${{ matrix.targetplatform }}
 
-    # Build the Test Project
-    - name: Build MyWpfApp.Tests
-      run: msbuild MyWpfApp.Tests\MyWpfApp.Tests.csproj /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
-      env:
-        Configuration: Release
-        RuntimeIdentifier: win-${{ matrix.targetplatform }}
-        TargetPlatform: ${{ matrix.targetplatform }}
-
     # Test
     - name: Execute Unit Tests
       run: dotnet test MyWpfApp.Tests\MyWpfApp.Tests.csproj
 
-    # Build the Windows Application Packaging Project
+    # Build the Windows Application Packaging project
     - name: Build MyWpfApp.Package 
       run: msbuild MyWpfApp.Package\MyWpfApp.Package.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
       env:  
@@ -54,9 +46,9 @@ jobs:
         Configuration: Release
         TargetPlatform: ${{ matrix.targetplatform }}
 
-    # Upload the Msix package: https://github.com/marketplace/actions/upload-artifact
+    # Upload the MSIX package: https://github.com/marketplace/actions/upload-artifact
     - name: Upload build artifacts
       uses: actions/upload-artifact@master
       with:
-        name: Msix Package
+        name: MSIX Package
         path: MyWpfApp.Package\AppPackages\
