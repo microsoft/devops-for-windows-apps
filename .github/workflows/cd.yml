@@ -15,15 +15,17 @@ jobs:
         channel: [Channel_Dev, Channel_Test]
         include:
           # includes the following variables for the matrix leg matching Channel_Dev
-          - channel:Channel_Dev
+          - channel: Channel_Dev
             ChannelName: Dev-Web
+            Configuration: Debug
             DistributionUrl: https://edwardskrod.github.io/devops-for-windows-apps-distribution-dev
             MsixPackageId: MyWPFApp.DevOpsDemo.Dev
             MsixPublisherId: CN=EdwardSkrod
             MsixPackageDisplayName: MyWPFApp (Dev)
 
           # includes the following variables for the matrix leg matching Channel_Test
-          - channel:Channel_Prod
+          - channel: Channel_Prod
+            Configuration: Release
             ChannelName: Prod-Web
             DistributionUrl: https://edwardskrod.github.io/devops-for-windows-apps-distribution-prod
             MsixPackageId: MyWPFApp.DevOpsDemo.Prod
@@ -68,17 +70,17 @@ jobs:
     - name: Build MyWpfApp
       run: msbuild MyWpfApp\MyWpfApp.csproj /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
       env:
-        Configuration: Release
-        RuntimeIdentifier: win-${{ matrix.targetplatform }}
-        TargetPlatform: ${{ matrix.targetplatform }}
+        Configuration: ${{channel.Configuration}
+        RuntimeIdentifier: win-x86
+        TargetPlatform: x86
 
     # Build the Windows Application Packaging project
     - name: Build MyWpfApp.Package 
       run: msbuild MyWpfApp.Package\MyWpfApp.Package.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
       env:  
         BuildMode: SideLoadOnly
-        Configuration: Release
-        TargetPlatform: ${{ matrix.targetplatform }}
+        Configuration: ${{channel.Configuration}
+        TargetPlatform: x86
 
     # Archive the package
     - name: Create archive
