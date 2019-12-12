@@ -26,6 +26,14 @@ jobs:
     - name: Setup MSBuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
 
+    # Test
+    - name: Execute Unit Tests
+      run: dotnet test MyWpfApp.Tests\MyWpfApp.Tests.csproj
+
+    # Clean the solution to prevent error NETSDK1047
+    - name: Clean the solution
+      run: msbuild MyWpfApp.sln /t:Clean
+
     # Build the Wpf Net Core application
     - name: Build MyWpfApp
       run: msbuild MyWpfApp\MyWpfApp.csproj /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
@@ -33,10 +41,6 @@ jobs:
         Configuration: Release
         RuntimeIdentifier: win-${{ matrix.targetplatform }}
         TargetPlatform: ${{ matrix.targetplatform }}
-
-    # Test
-    - name: Execute Unit Tests
-      run: dotnet test MyWpfApp.Tests\MyWpfApp.Tests.csproj
 
     # Build the Windows Application Packaging project
     - name: Build MyWpfApp.Package 
