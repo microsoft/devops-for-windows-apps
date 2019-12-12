@@ -1,0 +1,99 @@
+name:  Wpf Continuous Delivery
+
+# Trigger on push
+on: [push]
+
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        channel: [Channel_Dev, Channel_Test]
+        include:
+          # includes the following variables for the matrix leg matching Channel_Dev
+          - channel: Channel_Dev
+            ChannelName: Dev-Web
+            Configuration: Debug
+            DistributionUrl: https://edwardskrod.github.io/devops-for-windows-apps-distribution-dev
+            MsixPackageId: MyWPFApp.DevOpsDemo.Dev
+            MsixPublisherId: CN=EdwardSkrod
+            MsixPackageDisplayName: MyWPFApp (Dev)
+
+          # includes the following variables for the matrix leg matching Channel_Test
+          - channel: Channel_Prod
+            Configuration: Release
+            ChannelName: Prod-Web
+            DistributionUrl: https://edwardskrod.github.io/devops-for-windows-apps-distribution-prod
+            MsixPackageId: MyWPFApp.DevOpsDemo.Prod
+            MsixPublisherId: CN=EdwardSkrod
+            MsixPackageDisplayName: MyWPFApp (Prod)
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.100
+
+    # Update the appxmanifest before build by setting the per-channel values set in the matrix.
+    - name: Update manifest version
+      run: |
+        [xml]$manifest = get-content ".\MyWPFApp.Package\Package.appxmanifest"
+        $manifest.Package.Identity.Name = "${{matrix.MsixPackageId}}"
+        $manifest.Package.Identity.Publisher = "${{matrix.MsixPublisherId}}"
+        $manifest.Package.Properties.DisplayName = "${{matrix.MsixPackageDisplayName}}"
+        $manifest.Package.Applications.Application.VisualElements.DisplayName = "${{matrix.MsixPackageDisplayName}}"
+        $manifest.save(".\MyWPFApp.Package\Package.appxmanifest")
+
+    # Add  MsBuild to the PATH: https://github.com/topics/msbuild-action
+    - name: Setup MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+
+    # Build the Wpf Net Core application
+    - name: Build MyWpfApp
+      run: msbuild MyWpfApp\MyWpfApp.csproj /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
+      env:
+        Configuration: ${{matrix.channel.Configuration}}
+        RuntimeIdentifier: win-x86
+        TargetPlatform: x86
+
+    # Build the Windows Application Packaging project
+    - name: Build MyWpfApp.Package 
+      run: msbuild MyWpfApp.Package\MyWpfApp.Package.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
+      env:  
+        BuildMode: SideLoadOnly
+        Configuration: ${{matrix.channel.Configuration}}
+        TargetPlatform: x86
+
+    # Archive the package
+    - name: Create archive
+      run: Compress-Archive -Path MyWpfApp.Packaging\AppPackages\* -DestinationPath MyWpfApp.Packaging\AppPackages\Archive.zip
+
+    # Create the release:  https://github.com/actions/create-release
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: ${{ github.ref }}.${{matrix.channel.ChannelName}}
+        release_name:  ${{ github.ref }}.${{matrix.channel.ChannelName}}
+        draft: false
+        prerelease: false
+
+    # Upload release asset:   https://github.com/actions/upload-release-asset
+    - name: Update release asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}  # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: MyWpfApp.Packaging\AppPackages\Archive.zip
+        asset_name: Archive.zip
+        asset_content_type: application/zip
