@@ -21,9 +21,31 @@ Workflows are defined in YAML files in the .github/workflows folder.  In this pr
 
 Build, test, package, and save MSIX artifacts for multiple configurations of the 'Local' channel.
 
-The continuous integration workflow gets triggered anytime a developer pushes code to the repo.  The GitHub build agent calls a GitHub action to install NET Core and then adds MSBuild.exe to the PATH to be used later.  It then executes unit tests by calling "dotnet test MyWpfApp.Tests.csproj".  In order to prevent a known error, the workflow cleans the solution then builds the Wpf Net Core application with MsBuild.  From there, the agent creates an MSIX app package and uploads it as a [build artifact](https://github.com/marketplace/actions/upload-artifact), along with an .appinstaller file, allowing developers to deploy and test the app.
+On every `push` to the repo, [Install .NET Core](https://github.com/actions/setup-dotnet), add [MsBuild](https://github.com/topics/msbuild-action) to the PATH, and execute unit tests.
 
-In our workflow, we are also able to target multiple platforms by setting the build matrix target platform for x86 and x64, for example.  See the article [Workflow syntax for GitHub Actions](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions) for more information.
+```yaml
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.100
+
+    # Add  MsBuild to the PATH: https://github.com/topics/msbuild-action
+    - name: Setup MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+
+    # Test
+    - name: Execute Unit Tests
+      run: dotnet test MyWpfApp.Tests\MyWpfApp.Tests.csproj
+```
+
+In our workflow, we are also able to target multiple platforms by setting the build matrix target platform for x86 and x64, for example. ```yaml
+    strategy:
+      matrix:
+        targetplatform: [x86, x64]
+```
+See the article [Workflow syntax for GitHub Actions](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions) for more information.
+
+The workflow then builds and packages the Wpf Net Core application with MsBuild.  From there, the workload [uploads the build artifacts](https://github.com/marketplace/actions/upload-artifact), allowing developers to deploy and test the app.
 
 This CI pipeline uses the Package Identity Name defined in the Package.appxmanifest in the Windows Application Packaging project to identify the application as "MyWPFApp (Local)." By suffixing the application with "(Local)", we are able to install it side by side with other channels of the app.  Developers have the option to download the artifact to test the build or upload the artifact to a website or file share for app distribution.  
 
@@ -120,3 +142,6 @@ This project welcomes contributions and suggestions. Most contributions require 
 When you submit a pull request, a CLA-bot will automatically determine whether you need to provide a CLA and decorate the PR appropriately (e.g., label, comment). Simply follow the instructions provided by the bot. You will only need to do this once across all repos using our CLA.
 
 This project has adopted the Microsoft Open Source Code of Conduct. For more information see the Code of Conduct FAQ or contact opencode@microsoft.com with any additional questions or comments.
+
+## License
+The scripts and documentation in this project are released under the [MIT License](LICENSE)
