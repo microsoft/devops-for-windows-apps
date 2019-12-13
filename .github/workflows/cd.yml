@@ -84,7 +84,7 @@ jobs:
 
     # Archive the package
     - name: Create archive
-      run: Compress-Archive -Path MyWpfApp.Package\AppPackages\* -DestinationPath MyWpfApp.Package\AppPackages\AppPackages.${{ github.ref }}.${{matrix.ChannelName}}.zip
+      run: Compress-Archive -Path MyWpfApp.Package\AppPackages\* -DestinationPath MyWpfApp.Package\AppPackages\AppPackages.${{matrix.ChannelName}}.zip
 
     # Create the release:  https://github.com/actions/create-release
     - name: Create release
