@@ -65,6 +65,14 @@ jobs:
         RuntimeIdentifier: win-x86
         TargetPlatform: x86
 
+    # Install the Encryption tool, gpg4Win
+    - name: Install gpg4Win
+      run: choco install gpg4win
+
+    # Decrypt the .pfx with gpg4win
+    - name: Decrypt .pfx
+      run: gpg --quiet --batch --yes --decrypt --passphrase=${{secrets.Pfx_gpg_secret_passphrase}} --output MyWpfApp.Package\EdwardSkrodDeveloper.pfx MyWPFApp.Package\EdwardSkrodDeveloper.pfx.gpg
+
     # Build the Windows Application Packaging project
     - name: Build MyWpfApp.Package 
       run: msbuild MyWpfApp.Package\MyWpfApp.Package.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
@@ -76,7 +84,7 @@ jobs:
 
     # Archive the package
     - name: Create archive
-      run: Compress-Archive -Path MyWpfApp.Package\AppPackages\* -DestinationPath MyWpfApp.Package\AppPackages\Archive.zip
+      run: Compress-Archive -Path MyWpfApp.Package\AppPackages\* -DestinationPath MyWpfApp.Package\AppPackages\AppPackages.${{matrix.ChannelName}}.zip
 
     # Create the release:  https://github.com/actions/create-release
     - name: Create release
