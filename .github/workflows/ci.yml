@@ -13,6 +13,13 @@ jobs:
 
     runs-on: windows-latest
 
+    env:
+      Solution_Path: MyWpfApp.sln
+      Test_Project_Path: MyWpfApp.Tests\MyWpfApp.Tests.csproj
+      Wpf_Project_Path: MyWpfApp\MyWpfApp.csproj
+      Wap_Project_Directory: MyWpfApp.Package
+      Wap_Project_Name: MyWpfApp.Package.wapproj
+
     steps:
     - name: Checkout
       uses: actions/checkout@v1
@@ -28,15 +35,15 @@ jobs:
 
     # Test
     - name: Execute Unit Tests
-      run: dotnet test MyWpfApp.Tests\MyWpfApp.Tests.csproj
+      run: dotnet test $env:Test_Project_Path
 
     # Clean the solution to prevent error NETSDK1047
     - name: Clean the solution
-      run: msbuild MyWpfApp.sln /t:Clean
+      run: msbuild $env:Solution_Path /t:Clean
 
     # Build the Wpf Net Core application
-    - name: Build MyWpfApp
-      run: msbuild MyWpfApp\MyWpfApp.csproj /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
+    - name: Build the Wpf App
+      run: msbuild $env:Wpf_Project_Path /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
       env:
         Configuration: Release
         RuntimeIdentifier: win-${{ matrix.targetplatform }}
@@ -48,11 +55,11 @@ jobs:
 
     # Decrypt the .pfx with gpg4win
     - name: Decrypt .pfx
-      run: gpg --quiet --batch --yes --decrypt --passphrase=${{secrets.Pfx_gpg_secret_passphrase}} --output MyWpfApp.Package\EdwardSkrodDeveloper.pfx MyWPFApp.Package\EdwardSkrodDeveloper.pfx.gpg
+      run: gpg --quiet --batch --yes --decrypt --passphrase=${{secrets.Pfx_gpg_secret_passphrase}} --output $env:Wap_Project_Directory\EdwardSkrodDeveloper.pfx $env:Wap_Project_Directory\EdwardSkrodDeveloper.pfx.gpg
 
     # Build the Windows Application Packaging project
-    - name: Build MyWpfApp.Package 
-      run: msbuild MyWpfApp.Package\MyWpfApp.Package.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
+    - name: Build the Wap 
+      run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
       env:  
         BuildMode: SideLoadOnly
         Configuration: Release

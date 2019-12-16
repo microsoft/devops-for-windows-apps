@@ -34,6 +34,13 @@ jobs:
 
     runs-on: windows-latest
 
+    env:
+      Solution_Path: MyWpfApp.sln
+      Test_Project_Path: MyWpfApp.Tests\MyWpfApp.Tests.csproj
+      Wpf_Project_Path: MyWpfApp\MyWpfApp.csproj
+      Wap_Project_Directory: MyWpfApp.Package
+      Wap_Project_Name: MyWpfApp.Package.wapproj
+
     steps:
     - name: Checkout
       uses: actions/checkout@v1
@@ -46,20 +53,20 @@ jobs:
     # Update the appxmanifest before build by setting the per-channel values set in the matrix.
     - name: Update manifest version
       run: |
-        [xml]$manifest = get-content ".\MyWPFApp.Package\Package.appxmanifest"
+        [xml]$manifest = get-content ".\$env:Wap_Project_Directory\Package.appxmanifest"
         $manifest.Package.Identity.Name = "${{matrix.MsixPackageId}}"
         $manifest.Package.Identity.Publisher = "${{matrix.MsixPublisherId}}"
         $manifest.Package.Properties.DisplayName = "${{matrix.MsixPackageDisplayName}}"
         $manifest.Package.Applications.Application.VisualElements.DisplayName = "${{matrix.MsixPackageDisplayName}}"
-        $manifest.save(".\MyWPFApp.Package\Package.appxmanifest")
+        $manifest.save(".\$env:Wap_Project_Directory\Package.appxmanifest")
 
     # Add  MsBuild to the PATH: https://github.com/topics/msbuild-action
     - name: Setup MSBuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
 
     # Build the Wpf Net Core application
-    - name: Build MyWpfApp
-      run: msbuild MyWpfApp\MyWpfApp.csproj /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
+    - name: Build the Wpf app
+      run: msbuild $env:Wpf_Project_Path  /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
       env:
         Configuration: ${{matrix.Configuration}}
         RuntimeIdentifier: win-x86
@@ -71,11 +78,11 @@ jobs:
 
     # Decrypt the .pfx with gpg4win
     - name: Decrypt .pfx
-      run: gpg --quiet --batch --yes --decrypt --passphrase=${{secrets.Pfx_gpg_secret_passphrase}} --output MyWpfApp.Package\EdwardSkrodDeveloper.pfx MyWPFApp.Package\EdwardSkrodDeveloper.pfx.gpg
+      run: gpg --quiet --batch --yes --decrypt --passphrase=${{secrets.Pfx_gpg_secret_passphrase}} --output $env:Wap_Project_Directory\EdwardSkrodDeveloper.pfx $env:Wap_Project_Directory\EdwardSkrodDeveloper.pfx.gpg
 
     # Build the Windows Application Packaging project
-    - name: Build MyWpfApp.Package 
-      run: msbuild MyWpfApp.Package\MyWpfApp.Package.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
+    - name: Build the Wap
+      run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
       env:
         AppInstallerUri: ${{matrix.DistributionUrl}}
         BuildMode: SideLoadOnly
@@ -84,7 +91,7 @@ jobs:
 
     # Archive the package
     - name: Create archive
-      run: Compress-Archive -Path MyWpfApp.Package\AppPackages\* -DestinationPath MyWpfApp.Package\AppPackages\AppPackages.${{matrix.ChannelName}}.zip
+      run: Compress-Archive -Path $env:Wap_Project_Directory\AppPackages\* -DestinationPath $env:Wap_Project_Directory\AppPackages\AppPackages.zip
 
     # Create the release:  https://github.com/actions/create-release
     - name: Create release
@@ -106,6 +113,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}  # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: MyWpfApp.Package\AppPackages\Archive.zip
-        asset_name: Archive.zip
+        asset_path: MyWpfApp.Package\AppPackages\AppPackages.zip
+        asset_name: AppPackages.zip
         asset_content_type: application/zip
