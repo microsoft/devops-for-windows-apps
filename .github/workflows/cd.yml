@@ -81,7 +81,7 @@ jobs:
       run: gpg --quiet --batch --yes --decrypt --passphrase=${{secrets.Pfx_gpg_secret_passphrase}} --output $env:Wap_Project_Directory\EdwardSkrodDeveloper.pfx $env:Wap_Project_Directory\EdwardSkrodDeveloper.pfx.gpg
 
     # Build the Windows Application Packaging project
-    - name: Build MyWpfApp.Package 
+    - name: Build the Wap
       run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
       env:
         AppInstallerUri: ${{matrix.DistributionUrl}}
@@ -91,7 +91,7 @@ jobs:
 
     # Archive the package
     - name: Create archive
-      run: Compress-Archive -Path $env:Wap_Project_Directory\AppPackages\* -DestinationPath $env:Wap_Project_Directory\AppPackages\AppPackages.${{matrix.ChannelName}}.zip
+      run: Compress-Archive -Path $env:Wap_Project_Directory\AppPackages\* -DestinationPath $env:Wap_Project_Directory\AppPackages\AppPackages.zip
 
     # Create the release:  https://github.com/actions/create-release
     - name: Create release
@@ -113,6 +113,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}  # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: MyWpfApp.Package\AppPackages\Archive.zip
-        asset_name: Archive.zip
+        asset_path: MyWpfApp.Package\AppPackages\AppPackages.zip
+        asset_name: AppPackages.zip
         asset_content_type: application/zip
