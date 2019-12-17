@@ -35,6 +35,7 @@ jobs:
     runs-on: windows-latest
 
     env:
+      SigningCertificate: EdwardSkrodDeveloper.pfx
       Solution_Path: MyWpfApp.sln
       Test_Project_Path: MyWpfApp.Tests\MyWpfApp.Tests.csproj
       Wpf_Project_Path: MyWpfApp\MyWpfApp.csproj
@@ -71,14 +72,10 @@ jobs:
         Configuration: ${{matrix.Configuration}}
         RuntimeIdentifier: win-x86
         TargetPlatform: x86
-
-    # Install the Encryption tool, gpg4Win
-    - name: Install gpg4Win
-      run: choco install gpg4win
-
-    # Decrypt the .pfx with gpg4win
-    - name: Decrypt .pfx
-      run: gpg --quiet --batch --yes --decrypt --passphrase=${{secrets.Pfx_gpg_secret_passphrase}} --output $env:Wap_Project_Directory\EdwardSkrodDeveloper.pfx $env:Wap_Project_Directory\EdwardSkrodDeveloper.pfx.gpg
+        
+    # Decode the Base64 encoded Pfx
+    - name: Decode the encoded Pfx
+      run: Get-Content ${{ secrets.Base64_Encoded_Pfx }} -Encoding UTF8 | Out-File $env:Wap_Project_Directory/$env:SigningCertificate
 
     # Build the Windows Application Packaging project
     - name: Build the Wap
@@ -88,6 +85,10 @@ jobs:
         BuildMode: SideLoadOnly
         Configuration: ${{matrix.Configuration}}
         TargetPlatform: x86
+
+    # Remove the .pfx
+    -name: Remove the .pfx
+      run: Remove-Item -path $env:Wap_Project_Directory/$env:SigningCertificate
 
     # Archive the package
     - name: Create archive

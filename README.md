@@ -119,29 +119,23 @@ Once the MSIX is created for each channel, the agent archives the AppPackages fo
 Creating channels for the application is a powerful way to allow side-by-side installations of different releases.
 
 ### Signing
-Although "best practices" recommends against submitting the signing certificate to the repo, we added an encrypted version of the .pfx in order to handle certificate signing in our CI/CD pipeline. The principle reason for this is that GitHub does not yet support ['secure files'](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/secure-files?view=azure-devops) like Azure DevOps.  The signing certificate is encrypted using [Gpg4win](https://www.gpg4win.org/download.html) prior to adding it to the repo.
+Avoid submitting certificates to the repo if at all possible, and git ignores them by default. To manage the safe handling of sensitive files like certificates, we can take advantage of [GitHub secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets), which allow you to store sensitive information in the repository.
 
-___It is incredibly important to properly encrypt the .pfx before uploading it to the repo in order to protect your signing certificate.___
+First, generate a .pfx in the Windows Application Packaging Project or add an existing .pfx to the project. Then, to take advantage of this feature, we first use PowerShell to encode the .pfx file using Base64 encoding.
 
-Once Gpg4win has downloaded, open the Kleopatra app and select "Sign/Encrypt...". Select the .pfx to encrypt. Check "Encrypt with password" and deselect all the other checkboxes. Make note of or change the output directory and file name and select "Encrypt". At the prompt, enter and then re-enter a secure passphrase. Click finish.
+`$fileContentBytes = Get-Content '.\SigningCertificate.pfx' -Encoding Byte [System.Convert]::ToBase64String($fileContentBytes) | Out-File `SigningCertificate_Encoded.txt'`
 
-Add the newly encrypted .gpg file to the Windows Application Packaging Project and check it into the repository.  Add the password to the project's GitHub Secrets.
+To [add a secret to your workflow](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners#creating-and-using-secrets-encrypted-variables), navigate to Settings -> Secrets. 
 
-In the workflow, we use [Chocolatey Package Manager](https://chocolatey.org/) to download gpg4win to the build agent, then use the shell to decrypt the .pfx, using the secret passphrase stored in the GitHub secrets to decrypt the file. 
+In our workflow, we add a step to decode the secret, save the .pfx to the build agent, and package the Windows Application Packaging project.
 
 ```yaml
-    # Install the Encryption tool, gpg4Win
-    - name: Install gpg4Win
-      run: choco install gpg4win
-
-    # Decrypt the .pfx with gpg4win
-    - name: Decrypt .pfx
-      run: gpg --quiet --batch --yes --decrypt --passphrase=${{secrets.Pfx_gpg_secret_passphrase}} --output MyWpfApp.Package\EdwardSkrodDeveloper.pfx MyWPFApp.Package\EdwardSkrodDeveloper.pfx.gpg
+    # Decode the Base64 encoded Pfx
+    - name: Decode the encoded Pfx
+      run: Get-Content ${{ secrets.Base64_Encoded_Pfx }} -Encoding UTF8 | Out-File $env:Wap_Project_Directory/EdwardSkrodDeveloper.pfx
 ```
 
-To [add a secret to your workflow](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners#creating-and-using-secrets-encrypted-variables), navigate to Settings -> Secrets.
-
-Once the certificate is decrypted, we sign the package during the packaging step and pass the signing certificate's password to MSBuild.
+Once the certificate is decoded, we sign the package during the packaging step and pass the signing certificate's password to MSBuild.
 
 ```yaml
     # Build the Windows Application Packaging project
@@ -154,7 +148,13 @@ Once the certificate is decrypted, we sign the package during the packaging step
         TargetPlatform: x86
 
 ```
+Finally, we delete the .pfx.
+```yaml
 
+    # Remove the .pfx
+    -name: Remove the .pfx
+      run: Remove-Item -path $env:Wap_Project_Directory/$env:SigningCertificate
+```
 
 # Contributions
 This project welcomes contributions and suggestions. Most contributions require you to agree to a Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us the rights to use your contribution. For details, visit https://cla.microsoft.com.
