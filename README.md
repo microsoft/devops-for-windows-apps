@@ -48,6 +48,13 @@ See[Workflow syntax for GitHub Actions](https://help.github.com/en/actions/autom
 
 Build and package the Wpf Net Core application with MsBuild and then [upload the build artifacts](https://github.com/marketplace/actions/upload-artifact) to allow developers to deploy and test the app.
 
+The application is signed during the packaging step. Because best practices recommend against storing signing certificates in the Git repository, the .pfx file is encrypted using Gpg4win prior to adding it to the repo.
+It is incredibly important to properly encrypt the .pfx before uploading it to the repo in order to protect your signing certificate.
+
+Once Gpg4win has downloaded, open the Kleopatra app and select "Sign/Encrypt...". Select the .pfx to encrypt. Check "Encrypt with password" and deselect all the other checkboxes. Make note of or change the output directory and file name and select "Encrypt". At the prompt, enter and then re-enter a secure passphrase. Click finish.
+
+Add the newly encrypted .gpg file to the Windows Application Packaging Project and check it into the repository.
+
 This CI pipeline uses the Package Identity Name defined in the Package.appxmanifest in the Windows Application Packaging project to identify the application as "MyWPFApp (Local)." By suffixing the application with "(Local)", we are able to install it side by side with other channels of the app.  Developers have the option to download the artifact to test the build or upload the artifact to a website or file share for app distribution.  
 
 One incredibly powerful, yet simple, method of distribution is through the use of GitHub pages. To see the distribution website for the Local channel, please navigate to [edwardskrod/devops-for-windows-app-distribution-local.](https://github.com/edwardskrod/devops-for-windows-apps-distribution-local)
