@@ -44,16 +44,9 @@ Target multiple platforms by authoring the workflow to define a build matrix, a 
       matrix:
         targetplatform: [x86, x64]
 ```
-See[Workflow syntax for GitHub Actions](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions) for more information.
+See [Workflow syntax for GitHub Actions](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions) for more information.
 
 Build and package the Wpf Net Core application with MsBuild and then [upload the build artifacts](https://github.com/marketplace/actions/upload-artifact) to allow developers to deploy and test the app.
-
-The application is signed during the packaging step. Because best practices recommend against storing signing certificates in the Git repository, the .pfx file is encrypted using Gpg4win prior to adding it to the repo.
-It is incredibly important to properly encrypt the .pfx before uploading it to the repo in order to protect your signing certificate.
-
-Once Gpg4win has downloaded, open the Kleopatra app and select "Sign/Encrypt...". Select the .pfx to encrypt. Check "Encrypt with password" and deselect all the other checkboxes. Make note of or change the output directory and file name and select "Encrypt". At the prompt, enter and then re-enter a secure passphrase. Click finish.
-
-Add the newly encrypted .gpg file to the Windows Application Packaging Project and check it into the repository.
 
 This CI pipeline uses the Package Identity Name defined in the Package.appxmanifest in the Windows Application Packaging project to identify the application as "MyWPFApp (Local)." By suffixing the application with "(Local)", we are able to install it side by side with other channels of the app.  Developers have the option to download the artifact to test the build or upload the artifact to a website or file share for app distribution.  
 
@@ -121,12 +114,18 @@ jobs:
             MsixPackageDisplayName: MyWPFApp (Prod)
 ```
 
-The application is signed during the packaging step. Because best practices recommend against storing signing certificates in the Git repository, the .pfx file is encrypted using [Gpg4win](https://www.gpg4win.org/thanks-for-download.html) prior to adding it to the repo.  
-It is incredibly important to properly encrypt the .pfx before uploading it to the repo in order to protect your signing certificate.  
+Once the MSIX is created for each channel, the agent archives the AppPackages folder, then creates a Release with the specified git release tag.  The archive is uploaded to the release as an asset for storage or distribution.
 
-Once Gpg4win has downloaded, open the Kleopatra app and select "Sign/Encrypt...".  Select the .pfx to encrypt.  Check "Encrypt with password" and deselect all the other checkboxes.  Make note of or change the output directory and file name and select "Encrypt".  At the prompt, enter and then re-enter a secure passphrase.  Click finish.
+Creating channels for the application is a powerful way to allow side-by-side installations of different releases.
 
-Add the newly encrypted .gpg file to the Windows Application Packaging Project and check it into the repository.
+### Signing
+Although "best practices" recommends against submitting the signing certificate to the repo, we added an encrypted version of the .pfx in order to handle certificate signing in our CI/CD pipeline. The principle reason for this is that GitHub does not yet support ['secure files'](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/secure-files?view=azure-devops) like Azure DevOps.  The signing certificate is encrypted using [Gpg4win](https://www.gpg4win.org/download.html) prior to adding it to the repo.
+
+___It is incredibly important to properly encrypt the .pfx before uploading it to the repo in order to protect your signing certificate.___
+
+Once Gpg4win has downloaded, open the Kleopatra app and select "Sign/Encrypt...". Select the .pfx to encrypt. Check "Encrypt with password" and deselect all the other checkboxes. Make note of or change the output directory and file name and select "Encrypt". At the prompt, enter and then re-enter a secure passphrase. Click finish.
+
+Add the newly encrypted .gpg file to the Windows Application Packaging Project and check it into the repository.  Add the password to the project's GitHub Secrets.
 
 In the workflow, we use [Chocolatey Package Manager](https://chocolatey.org/) to download gpg4win to the build agent, then use the shell to decrypt the .pfx, using the secret passphrase stored in the GitHub secrets to decrypt the file. 
 
@@ -155,10 +154,6 @@ Once the certificate is decrypted, we sign the package during the packaging step
         TargetPlatform: x86
 
 ```
-
-Once the MSIX is created for each channel, the agent archives the AppPackages folder, then creates a Release with the specified git release tag.  The archive is uploaded to the release as an asset for storage or distribution.
-
-Creating channels for the application is a powerful way to allow side-by-side installations of different releases.
 
 
 # Contributions
