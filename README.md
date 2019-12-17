@@ -115,6 +115,11 @@ jobs:
 ```
 
 The application is signed during the packaging step. Because best practices recommend against storing signing certificates in the Git repository, the .pfx file is encrypted using [Gpg4win](https://www.gpg4win.org/thanks-for-download.html) prior to adding it to the repo.  
+It is incredibly important to properly encrypt the .pfx before uploading it to the repo in order to protect your signing certificate.  
+
+Once Gpg4win has downloaded, open the Kleopatra app and select "Sign/Encrypt...".  Select the .pfx to encrypt.  Check "Encrypt with password" and deselect all the other checkboxes.  Make note of or change the output directory and file name and select "Encrypt".  At the prompt, enter and then re-enter a secure passphrase.  Click finish.
+
+Add the newly encrypted .gpg file to the Windows Application Packaging Project and check it into the repository.
 
 In the workflow, we use [Chocolatey Package Manager](https://chocolatey.org/) to download gpg4win to the build agent, then use the shell to decrypt the .pfx, using the secret passphrase stored in the GitHub secrets to decrypt the file. 
 
