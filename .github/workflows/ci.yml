@@ -33,11 +33,11 @@ jobs:
     # Add  MsBuild to the PATH
     - name: Add MSBuild.exe to the system PATH
       run: |
-      Install-PackageProvider -Name Nuget -Force
-      Install-Module -Name VSSetup -Force
-      $instance = Get-VSSetupInstance -All -Prerelease | Select-VSSetupInstance -Require 'Microsoft.Component.MSBuild' -Latest
-      $msbuildPath = Join-Path -Path $instance.InstallationPath -ChildPath "MSBuild\Current\Bin\MSBuild.exe"
-      $env:Path += ";$msbuildPath"
+        Install-PackageProvider -Name Nuget -Force
+        Install-Module -Name VSSetup -Force
+        $instance = Get-VSSetupInstance -All -Prerelease | Select-VSSetupInstance -Require 'Microsoft.Component.MSBuild' -Latest
+        $msbuildPath = Join-Path -Path $instance.InstallationPath -ChildPath "MSBuild\Current\Bin\MSBuild.exe"
+        $env:Path += ";$msbuildPath"
 
     # Test
     - name: Execute Unit Tests
