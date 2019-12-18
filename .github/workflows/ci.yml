@@ -38,6 +38,10 @@ jobs:
         $msbuildPath = Join-Path -Path $instance.InstallationPath -ChildPath "MSBuild\Current\Bin\"
         [Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine) + ";$msbuildPath", [EnvironmentVariableTarget]::Machine)
 
+    # Print the system path
+    - name: Print path
+      run: Write-Host $env:Path
+
     # Test
     - name: Execute Unit Tests
       run: dotnet test $env:Test_Project_Path
