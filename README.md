@@ -40,14 +40,24 @@ On every `push` to the repo, [Install .NET Core](https://github.com/actions/setu
 
     # Test
     - name: Execute Unit Tests
-      run: dotnet test MyWpfApp.Tests\MyWpfApp.Tests.csproj
+      run: dotnet test $env:Test_Project_Path
 ```
 
-Target multiple platforms by authoring the workflow to define a build matrix, a set of different configurations of the runner environment.   
+Target multiple platforms by authoring the workflow to define a build matrix, a set of different configurations of the runner environment. Define [environment variables](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/using-environment-variables) for use by the workflow.   
 ```yaml
     strategy:
       matrix:
         targetplatform: [x86, x64]
+
+    runs-on: windows-latest
+
+    env:
+      SigningCertificate: EdwardSkrodDeveloper.pfx
+      Solution_Path: MyWpfApp.sln
+      Test_Project_Path: MyWpfApp.Tests\MyWpfApp.Tests.csproj
+      Wpf_Project_Path: MyWpfApp\MyWpfApp.csproj
+      Wap_Project_Directory: MyWpfApp.Package
+      Wap_Project_Name: MyWpfApp.Package.wapproj
 ```
 See [Workflow syntax for GitHub Actions](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions) for more information.
 
