@@ -154,7 +154,7 @@ In our workflow, we add a step to decode the secret, save the .pfx to the build 
 ```yaml
     # Decode the Base64 encoded Pfx
     - name: Decode the encoded Pfx
-      run: Get-Content ${{ secrets.Base64_Encoded_Pfx }} -Encoding UTF8 | Out-File $env:Wap_Project_Directory/$env:SigningCertificate
+      run: Get-Content -Stream ${{ secrets.Base64_Encoded_Pfx }} -Encoding UTF8 | Out-File $env:Wap_Project_Directory/$env:SigningCertificate
       if: ${{ matrix.ChannelName }} != Prod_Store
 ```
 
