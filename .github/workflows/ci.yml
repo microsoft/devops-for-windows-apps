@@ -52,7 +52,8 @@ jobs:
         
     # Decode the Base64 encoded Pfx
     - name: Decode the Pfx
-      run: [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String(${{ secrets.Base64_Encoded_Pfx }})) | Out-File $env:Wap_Project_Directory/$env:SigningCertificate
+      run: |
+        [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String(${{ secrets.Base64_Encoded_Pfx }})) | Out-File $env:Wap_Project_Directory/$env:SigningCertificate
 
     # Build the Windows Application Packaging project
     - name: Build the Wap 
