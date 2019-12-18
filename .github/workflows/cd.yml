@@ -118,7 +118,7 @@ jobs:
         TargetPlatform: ${{ matrix.TargetPlatform }}
 
     # Remove the .pfx
-    -name: Remove the .pfx
+    - name: Remove the .pfx
       run: Remove-Item -path $env:Wap_Project_Directory/$env:SigningCertificate
       if: ${{ matrix.ChannelName }} != Prod_Store
 
