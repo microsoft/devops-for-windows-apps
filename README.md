@@ -29,9 +29,14 @@ On every `push` to the repo, [Install .NET Core](https://github.com/actions/setu
       with:
         dotnet-version: 3.1.100
 
-    # Add  MsBuild to the PATH: https://github.com/topics/msbuild-action
-    - name: Setup MSBuild.exe
-      uses: warrenbuckley/Setup-MSBuild@v1
+    # Add  MsBuild to the PATH
+    - name: Add MSBuild.exe to the system PATH
+      run: |
+      Install-PackageProvider -Name Nuget -Force
+      Install-Module -Name VSSetup -Force
+      $instance = Get-VSSetupInstance -All -Prerelease | Select-VSSetupInstance -Require 'Microsoft.Component.MSBuild' -Latest
+      $msbuildPath = Join-Path -Path $instance.InstallationPath -ChildPath "MSBuild\Current\Bin\MSBuild.exe"
+      $env:Path += ";$msbuildPath"
 
     # Test
     - name: Execute Unit Tests
@@ -119,13 +124,13 @@ Once the MSIX is created for each channel, the agent archives the AppPackages fo
 Creating channels for the application is a powerful way to allow side-by-side installations of different releases.
 
 ### Signing
-Avoid submitting certificates to the repo if at all possible, and git ignores them by default. To manage the safe handling of sensitive files like certificates, we can take advantage of [GitHub secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets), which allow you to store sensitive information in the repository.
+Avoid submitting certificates to the repo if at all possible. Git ignores them by default. To manage the safe handling of sensitive files like certificates, we can take advantage of [GitHub secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets), which allow you to store sensitive information in the repository.
 
-First, generate a .pfx in the Windows Application Packaging Project or add an existing .pfx to the project. Then, to take advantage of this feature, we first use PowerShell to encode the .pfx file using Base64 encoding.
+First, generate a signing certificate in the Windows Application Packaging Project or add an existing signing certificate to the project. Then, to take advantage of this feature, we use PowerShell to encode the .pfx file using Base64 encoding.
 
 `$fileContentBytes = Get-Content '.\SigningCertificate.pfx' -Encoding Byte [System.Convert]::ToBase64String($fileContentBytes) | Out-File `SigningCertificate_Encoded.txt'`
 
-To [add a secret to your workflow](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners#creating-and-using-secrets-encrypted-variables), navigate to Settings -> Secrets. 
+Next, we add the encoded certificate to our repo as a GitHub secret. [Add a secret to your workflow.](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners#creating-and-using-secrets-encrypted-variables)
 
 In our workflow, we add a step to decode the secret, save the .pfx to the build agent, and package the Windows Application Packaging project.
 

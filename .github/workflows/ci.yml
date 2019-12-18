@@ -30,9 +30,14 @@ jobs:
       with:
         dotnet-version: 3.1.100
 
-    # Add  MsBuild to the PATH: https://github.com/topics/msbuild-action
-    - name: Setup MSBuild.exe
-      uses: warrenbuckley/Setup-MSBuild@v1
+    # Add  MsBuild to the PATH
+    - name: Add MSBuild.exe to the system PATH
+      run: |
+      Install-PackageProvider -Name Nuget -Force
+      Install-Module -Name VSSetup -Force
+      $instance = Get-VSSetupInstance -All -Prerelease | Select-VSSetupInstance -Require 'Microsoft.Component.MSBuild' -Latest
+      $msbuildPath = Join-Path -Path $instance.InstallationPath -ChildPath "MSBuild\Current\Bin\MSBuild.exe"
+      $env:Path += ";$msbuildPath"
 
     # Test
     - name: Execute Unit Tests
@@ -56,7 +61,7 @@ jobs:
 
     # Build the Windows Application Packaging project
     - name: Build the Wap 
-      run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
+      run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificateKeyFile=$env:Wap_Project_Directory/$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
       env:  
         BuildMode: SideLoadOnly
         Configuration: Release
