@@ -32,11 +32,10 @@ On every `push` to the repo, [Install .NET Core](https://github.com/actions/setu
     # Add  MsBuild to the PATH
     - name: Add MSBuild.exe to the system PATH
       run: |
-      Install-PackageProvider -Name Nuget -Force
-      Install-Module -Name VSSetup -Force
-      $instance = Get-VSSetupInstance -All -Prerelease | Select-VSSetupInstance -Require 'Microsoft.Component.MSBuild' -Latest
-      $msbuildPath = Join-Path -Path $instance.InstallationPath -ChildPath "MSBuild\Current\Bin\MSBuild.exe"
-      $env:Path += ";$msbuildPath"
+        Install-Module -Name VSSetup -Scope CurrentUser -Force
+        $instance = Get-VSSetupInstance -All -Prerelease | Select-VSSetupInstance -Require 'Microsoft.Component.MSBuild' -Latest
+        $msbuildPath = Join-Path -Path $instance.InstallationPath -ChildPath "MSBuild\Current\Bin\MSBuild.exe"
+        $env:Path += ";$msbuildPath"
 
     # Test
     - name: Execute Unit Tests
@@ -92,15 +91,15 @@ In this workflow, the GitHub agent builds the Wpf Net Core application and creat
     # Update the appxmanifest before build by setting the per-channel values set in the matrix.
     - name: Update manifest version
       run: |
-        [xml]$manifest = get-content ".\MyWPFApp.Package\Package.appxmanifest"
-        $manifest.Package.Identity.Name = "${{matrix.MsixPackageId}}"
-        $manifest.Package.Identity.Publisher = "${{matrix.MsixPublisherId}}"
-        $manifest.Package.Properties.DisplayName = "${{matrix.MsixPackageDisplayName}}"
-        $manifest.Package.Applications.Application.VisualElements.DisplayName = "${{matrix.MsixPackageDisplayName}}"
-        $manifest.save(".\MyWPFApp.Package\Package.appxmanifest")
+        [xml]$manifest = get-content ".\$env:Wap_Project_Directory\Package.appxmanifest"
+        $manifest.Package.Identity.Name = "${{ matrix.MsixPackageId }}"
+        $manifest.Package.Identity.Publisher = "${{ matrix.MsixPublisherId }}"
+        $manifest.Package.Properties.DisplayName = "${{ matrix.MsixPackageDisplayName }}"
+        $manifest.Package.Applications.Application.VisualElements.DisplayName = "${{ matrix.MsixPackageDisplayName }}"
+        $manifest.save(".\$env:Wap_Project_Directory\Package.appxmanifest")
 ```
  
- Channels and variables are defined in the build matrix.
+ Channels and variables are defined in the build matrix.  In this workflow, we will build and create app packages for Dev, Prod_Sideload and Prod_Store.
 ```yaml
 jobs:
 
@@ -108,25 +107,37 @@ jobs:
 
     strategy:
       matrix:
-        channel: [Channel_Dev, Channel_Prod]
+        channel: [Dev, Prod_Sideload, Prod_Store]
         include:
-          # includes the following variables for the matrix leg matching Channel_Dev
-          - channel: Channel_Dev
+          # includes the following variables for the matrix leg matching Dev
+          - channel: Dev
             ChannelName: Dev
             Configuration: Debug
             DistributionUrl: https://edwardskrod.github.io/devops-for-windows-apps-distribution-dev
             MsixPackageId: MyWPFApp.DevOpsDemo.Dev
             MsixPublisherId: CN=EdwardSkrod
             MsixPackageDisplayName: MyWPFApp (Dev)
+            TargetPlatform: x86
 
-          # includes the following variables for the matrix leg matching Channel_Test
-          - channel: Channel_Prod
+          # includes the following variables for the matrix leg matching Prod_Sideload
+          - channel: Prod_Sideload
             Configuration: Release
-            ChannelName: Prod
+            ChannelName: Prod_Sideload
             DistributionUrl: https://edwardskrod.github.io/devops-for-windows-apps-distribution-prod
-            MsixPackageId: MyWPFApp.DevOpsDemo.Prod
+            MsixPackageId: MyWPFApp.DevOpsDemo.ProdSideload
             MsixPublisherId: CN=EdwardSkrod
-            MsixPackageDisplayName: MyWPFApp (Prod)
+            MsixPackageDisplayName: MyWPFApp (ProdSideload)
+            TargetPlatform: x86
+
+          # includes the following variables for the matrix leg matching Prod_Store
+          - channel: Prod_Store
+            Configuration: Release
+            ChannelName: Prod_Store
+            DistributionUrl: 
+            MsixPackageId: MyWPFApp.DevOpsDemo.ProdStore
+            MsixPublisherId: CN=EdwardSkrod
+            MsixPackageDisplayName: MyWPFApp (ProdStore)
+            TargetPlatform: x86
 ```
 
 Once the MSIX is created for each channel, the agent archives the AppPackages folder, then creates a Release with the specified git release tag.  The archive is uploaded to the release as an asset for storage or distribution.
@@ -147,28 +158,30 @@ In our workflow, we add a step to decode the secret, save the .pfx to the build 
 ```yaml
     # Decode the Base64 encoded Pfx
     - name: Decode the encoded Pfx
-      run: Get-Content ${{ secrets.Base64_Encoded_Pfx }} -Encoding UTF8 | Out-File $env:Wap_Project_Directory/EdwardSkrodDeveloper.pfx
+      run: Get-Content ${{ secrets.Base64_Encoded_Pfx }} -Encoding UTF8 | Out-File $env:Wap_Project_Directory/$env:SigningCertificate
+      if: ${{ matrix.ChannelName }} != Prod_Store
 ```
 
 Once the certificate is decoded, we sign the package during the packaging step and pass the signing certificate's password to MSBuild.
 
 ```yaml
-    # Build the Windows Application Packaging project
-    - name: Build MyWpfApp.Package 
-      run: msbuild MyWpfApp.Package\MyWpfApp.Package.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
+    # Build the Windows Application Packaging project for Dev and Prod_Sideload
+    - name: Build the Wap for ${{ matrix.ChannelName }}
+      run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificateKeyFile=$env:Wap_Project_Directory/$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
+      if: ${{ matrix.ChannelName }} != Prod_Store
       env:
-        AppInstallerUri: ${{matrix.DistributionUrl}}
+        AppInstallerUri: ${{ matrix.DistributionUrl }}
         BuildMode: SideLoadOnly
-        Configuration: ${{matrix.Configuration}}
-        TargetPlatform: x86
-
+        Configuration: ${{ matrix.Configuration }}
+        GenerateAppInstallerFile: True
+        TargetPlatform: ${{ matrix.TargetPlatform }}
 ```
 Finally, we delete the .pfx.
 ```yaml
-
     # Remove the .pfx
-    -name: Remove the .pfx
+    - name: Remove the .pfx
       run: Remove-Item -path $env:Wap_Project_Directory/$env:SigningCertificate
+      if: ${{ matrix.ChannelName }} != Prod_Store
 ```
 
 # Contributions
