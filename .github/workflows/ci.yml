@@ -37,6 +37,7 @@ jobs:
         $instance = Get-VSSetupInstance -All -Prerelease | Select-VSSetupInstance -Require 'Microsoft.Component.MSBuild' -Latest
         $msbuildPath = Join-Path -Path $instance.InstallationPath -ChildPath "MSBuild\Current\Bin\MSBuild.exe"
         $env:Path += ";$msbuildPath"
+        Write-Host $env:Path
 
     # Test
     - name: Execute Unit Tests
