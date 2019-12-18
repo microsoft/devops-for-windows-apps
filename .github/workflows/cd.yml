@@ -63,6 +63,10 @@ jobs:
       with:
         dotnet-version: 3.1.100
 
+    # Add  MsBuild to the PATH: https://github.com/topics/msbuild-action
+    - name: Setup MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+
     # Update the appxmanifest before build by setting the per-channel values set in the matrix.
     - name: Update manifest version
       run: |
@@ -72,14 +76,6 @@ jobs:
         $manifest.Package.Properties.DisplayName = "${{ matrix.MsixPackageDisplayName }}"
         $manifest.Package.Applications.Application.VisualElements.DisplayName = "${{ matrix.MsixPackageDisplayName }}"
         $manifest.save(".\$env:Wap_Project_Directory\Package.appxmanifest")
-
-    # Add  MsBuild to the PATH
-    - name: Add MSBuild.exe to the system PATH
-      run: |
-        Install-Module -Name VSSetup -Scope CurrentUser -Force
-        $instance = Get-VSSetupInstance -All -Prerelease | Select-VSSetupInstance -Require 'Microsoft.Component.MSBuild' -Latest
-        $msbuildPath = Join-Path -Path $instance.InstallationPath -ChildPath "MSBuild\Current\Bin\"
-        [Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine) + ";$msbuildPath", [EnvironmentVariableTarget]::Machine)
 
     # Build the Wpf Net Core application
     - name: Build the Wpf app

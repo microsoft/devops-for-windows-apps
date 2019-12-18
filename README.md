@@ -29,14 +29,10 @@ On every `push` to the repo, [Install .NET Core](https://github.com/actions/setu
       with:
         dotnet-version: 3.1.100
 
-    # Add  MsBuild to the PATH
-    - name: Add MSBuild.exe to the system PATH
-      run: |
-        Install-Module -Name VSSetup -Scope CurrentUser -Force
-        $instance = Get-VSSetupInstance -All -Prerelease | Select-VSSetupInstance -Require 'Microsoft.Component.MSBuild' -Latest
-        $msbuildPath = Join-Path -Path $instance.InstallationPath -ChildPath "MSBuild\Current\Bin\MSBuild.exe"
-        [Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine) + ";$msbuildPath", [EnvironmentVariableTarget]::Machine)
-        
+    # Add  MsBuild to the PATH: https://github.com/topics/msbuild-action
+    - name: Setup MSBuild.exe
+      uses: warrenbuckley/Setup-MSBuild@v1
+      
     # Test
     - name: Execute Unit Tests
       run: dotnet test $env:Test_Project_Path
