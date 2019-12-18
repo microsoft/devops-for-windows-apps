@@ -35,7 +35,7 @@ On every `push` to the repo, [Install .NET Core](https://github.com/actions/setu
         Install-Module -Name VSSetup -Scope CurrentUser -Force
         $instance = Get-VSSetupInstance -All -Prerelease | Select-VSSetupInstance -Require 'Microsoft.Component.MSBuild' -Latest
         $msbuildPath = Join-Path -Path $instance.InstallationPath -ChildPath "MSBuild\Current\Bin\MSBuild.exe"
-        $env:Path += ";$msbuildPath"
+        [Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine) + ";$msbuildPath", [EnvironmentVariableTarget]::Machine)
         
     # Test
     - name: Execute Unit Tests
