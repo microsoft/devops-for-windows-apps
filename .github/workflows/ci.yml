@@ -33,6 +33,7 @@ jobs:
     # Add  MsBuild to the PATH
     - name: Add MSBuild.exe to the system PATH
       run: |
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         Install-PackageProvider -Name Nuget -Force
         Install-Module -Name VSSetup -Force
         $instance = Get-VSSetupInstance -All -Prerelease | Select-VSSetupInstance -Require 'Microsoft.Component.MSBuild' -Latest
