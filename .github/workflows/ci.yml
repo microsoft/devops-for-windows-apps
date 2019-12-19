@@ -57,6 +57,14 @@ jobs:
         $currentDirectory = Get-Location
         $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:Wap_Project_Directory -AdditionalChildPath $env:SigningCertificate
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
+        if (Test-Path $certificatePath)
+        {
+          Write-Host "$certificatePath exists"
+        }
+        else
+        {
+          Write-Host "$certificatePath does not exist."
+        }
 
     # Build the Windows Application Packaging project
     - name: Build the Wap 
