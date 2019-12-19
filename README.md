@@ -145,7 +145,8 @@ Avoid submitting certificates to the repo if at all possible. Git ignores them b
 
 First, generate a signing certificate in the Windows Application Packaging Project or add an existing signing certificate to the project. Then, to take advantage of this feature, we use PowerShell to encode the .pfx file using Base64 encoding.
 
-`$fileContentBytes = Get-Content '.\SigningCertificate.pfx' -Encoding Byte [System.Convert]::ToBase64String($fileContentBytes) | Out-File `SigningCertificate_Encoded.txt'`
+`$pfx_cert = Get-Content '.\EdwardSkrodDeveloper_password.pfx' -Encoding Byte
+[System.Convert]::ToBase64String($pfx_cert) | Out-File `SigningCertificate_Encoded.txt'`
 
 Next, we add the encoded certificate to our repo as a GitHub secret. [Add a secret to your workflow.](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners#creating-and-using-secrets-encrypted-variables)
 
@@ -153,9 +154,10 @@ In our workflow, we add a step to decode the secret, save the .pfx to the build 
 
 ```yaml
     # Decode the Base64 encoded Pfx
-    - name: Decode the encoded Pfx
-      run: Get-Content -Stream ${{ secrets.Base64_Encoded_Pfx }} -Encoding UTF8 | Out-File $env:Wap_Project_Directory/$env:SigningCertificate
-      if: ${{ matrix.ChannelName }} != Prod_Store
+    - name: Decode the Pfx
+      run: |
+        $pfx_cert_byte = [System.Convert]::FromBase64String(${{ secrets.Base64_Encoded_Pfx }})
+        Set-Content -Path $env:Wap_Project_Directory\$env:SigningCertificate -Value $pfx_cert_byte -Encoding Byte
 ```
 
 Once the certificate is decoded, we sign the package during the packaging step and pass the signing certificate's password to MSBuild.
