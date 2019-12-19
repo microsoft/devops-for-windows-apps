@@ -89,7 +89,9 @@ jobs:
     - name: Decode the Pfx
       run: |
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
-        [IO.File]::WriteAllBytes("$env:Wap_Project_Directory/$env:SigningCertificate", $pfx_cert_byte) 
+        $currentDirectory = Get-Location
+        $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:Wap_Project_Directory -AdditionalChildPath $env:SigningCertificate
+        [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
       if: ${{ matrix.ChannelName }} != Prod_Store
 
     # Build the Windows Application Packaging project for Dev and Prod_Sideload
