@@ -69,7 +69,6 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="EdwardSkrodDeveloper.pfx" />
     <Content Include="Images\*" />
     <Content Include="Package.appinstaller" />
   </ItemGroup>
