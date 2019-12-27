@@ -60,7 +60,7 @@
     <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
-    <PackageCertificateThumbprint>4F4CA2B6B8E5CE50A8C93BA373F214B7AB88E816</PackageCertificateThumbprint>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <PackageCertificateKeyFile>EdwardSkrodDeveloper.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <ItemGroup>
@@ -70,7 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\*" />
-    <None Include="EdwardSkrodDeveloper.pfx" />
     <Content Include="Package.appinstaller" />
   </ItemGroup>
   <ItemGroup>

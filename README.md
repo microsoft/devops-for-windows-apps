@@ -32,17 +32,27 @@ On every `push` to the repo, [Install .NET Core](https://github.com/actions/setu
     # Add  MsBuild to the PATH: https://github.com/topics/msbuild-action
     - name: Setup MSBuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
-
+      
     # Test
     - name: Execute Unit Tests
-      run: dotnet test MyWpfApp.Tests\MyWpfApp.Tests.csproj
+      run: dotnet test $env:Test_Project_Path
 ```
 
-Target multiple platforms by authoring the workflow to define a build matrix, a set of different configurations of the runner environment.   
+Target multiple platforms by authoring the workflow to define a build matrix, a set of different configurations of the runner environment. Define [environment variables](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/using-environment-variables) for use by the workflow.   
 ```yaml
     strategy:
       matrix:
         targetplatform: [x86, x64]
+
+    runs-on: windows-latest
+
+    env:
+      SigningCertificate: EdwardSkrodDeveloper.pfx
+      Solution_Path: MyWpfApp.sln
+      Test_Project_Path: MyWpfApp.Tests\MyWpfApp.Tests.csproj
+      Wpf_Project_Path: MyWpfApp\MyWpfApp.csproj
+      Wap_Project_Directory: MyWpfApp.Package
+      Wap_Project_Name: MyWpfApp.Package.wapproj
 ```
 See [Workflow syntax for GitHub Actions](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions) for more information.
 
@@ -77,15 +87,15 @@ In this workflow, the GitHub agent builds the Wpf Net Core application and creat
     # Update the appxmanifest before build by setting the per-channel values set in the matrix.
     - name: Update manifest version
       run: |
-        [xml]$manifest = get-content ".\MyWPFApp.Package\Package.appxmanifest"
-        $manifest.Package.Identity.Name = "${{matrix.MsixPackageId}}"
-        $manifest.Package.Identity.Publisher = "${{matrix.MsixPublisherId}}"
-        $manifest.Package.Properties.DisplayName = "${{matrix.MsixPackageDisplayName}}"
-        $manifest.Package.Applications.Application.VisualElements.DisplayName = "${{matrix.MsixPackageDisplayName}}"
-        $manifest.save(".\MyWPFApp.Package\Package.appxmanifest")
+        [xml]$manifest = get-content ".\$env:Wap_Project_Directory\Package.appxmanifest"
+        $manifest.Package.Identity.Name = "${{ matrix.MsixPackageId }}"
+        $manifest.Package.Identity.Publisher = "${{ matrix.MsixPublisherId }}"
+        $manifest.Package.Properties.DisplayName = "${{ matrix.MsixPackageDisplayName }}"
+        $manifest.Package.Applications.Application.VisualElements.DisplayName = "${{ matrix.MsixPackageDisplayName }}"
+        $manifest.save(".\$env:Wap_Project_Directory\Package.appxmanifest")
 ```
  
- Channels and variables are defined in the build matrix.
+ Channels and variables are defined in the build matrix.  In this workflow, we will build and create app packages for Dev, Prod_Sideload and Prod_Store.
 ```yaml
 jobs:
 
@@ -93,25 +103,37 @@ jobs:
 
     strategy:
       matrix:
-        channel: [Channel_Dev, Channel_Prod]
+        channel: [Dev, Prod_Sideload, Prod_Store]
         include:
-          # includes the following variables for the matrix leg matching Channel_Dev
-          - channel: Channel_Dev
+          # includes the following variables for the matrix leg matching Dev
+          - channel: Dev
             ChannelName: Dev
             Configuration: Debug
             DistributionUrl: https://edwardskrod.github.io/devops-for-windows-apps-distribution-dev
             MsixPackageId: MyWPFApp.DevOpsDemo.Dev
             MsixPublisherId: CN=EdwardSkrod
             MsixPackageDisplayName: MyWPFApp (Dev)
+            TargetPlatform: x86
 
-          # includes the following variables for the matrix leg matching Channel_Test
-          - channel: Channel_Prod
+          # includes the following variables for the matrix leg matching Prod_Sideload
+          - channel: Prod_Sideload
             Configuration: Release
-            ChannelName: Prod
+            ChannelName: Prod_Sideload
             DistributionUrl: https://edwardskrod.github.io/devops-for-windows-apps-distribution-prod
-            MsixPackageId: MyWPFApp.DevOpsDemo.Prod
+            MsixPackageId: MyWPFApp.DevOpsDemo.ProdSideload
             MsixPublisherId: CN=EdwardSkrod
-            MsixPackageDisplayName: MyWPFApp (Prod)
+            MsixPackageDisplayName: MyWPFApp (ProdSideload)
+            TargetPlatform: x86
+
+          # includes the following variables for the matrix leg matching Prod_Store
+          - channel: Prod_Store
+            Configuration: Release
+            ChannelName: Prod_Store
+            DistributionUrl: 
+            MsixPackageId: MyWPFApp.DevOpsDemo.ProdStore
+            MsixPublisherId: CN=EdwardSkrod
+            MsixPackageDisplayName: MyWPFApp (ProdStore)
+            TargetPlatform: x86
 ```
 
 Once the MSIX is created for each channel, the agent archives the AppPackages folder, then creates a Release with the specified git release tag.  The archive is uploaded to the release as an asset for storage or distribution.
@@ -119,42 +141,46 @@ Once the MSIX is created for each channel, the agent archives the AppPackages fo
 Creating channels for the application is a powerful way to allow side-by-side installations of different releases.
 
 ### Signing
-Although "best practices" recommends against submitting the signing certificate to the repo, we added an encrypted version of the .pfx in order to handle certificate signing in our CI/CD pipeline. The principle reason for this is that GitHub does not yet support ['secure files'](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/secure-files?view=azure-devops) like Azure DevOps.  The signing certificate is encrypted using [Gpg4win](https://www.gpg4win.org/download.html) prior to adding it to the repo.
+Avoid submitting certificates to the repo if at all possible. Git ignores them by default. To manage the safe handling of sensitive files like certificates, we can take advantage of [GitHub secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets), which allow you to store sensitive information in the repository.
 
-___It is incredibly important to properly encrypt the .pfx before uploading it to the repo in order to protect your signing certificate.___
+First, generate a signing certificate in the Windows Application Packaging Project or add an existing signing certificate to the project. Then, to take advantage of this feature, we use PowerShell to encode the .pfx file using Base64 encoding.
 
-Once Gpg4win has downloaded, open the Kleopatra app and select "Sign/Encrypt...". Select the .pfx to encrypt. Check "Encrypt with password" and deselect all the other checkboxes. Make note of or change the output directory and file name and select "Encrypt". At the prompt, enter and then re-enter a secure passphrase. Click finish.
+`$pfx_cert = Get-Content '.\EdwardSkrodDeveloper_password.pfx' -Encoding Byte
+[System.Convert]::ToBase64String($pfx_cert) | Out-File `SigningCertificate_Encoded.txt'`
 
-Add the newly encrypted .gpg file to the Windows Application Packaging Project and check it into the repository.  Add the password to the project's GitHub Secrets.
+Next, we add the encoded certificate to our repo as a GitHub secret. [Add a secret to your workflow.](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners#creating-and-using-secrets-encrypted-variables)
 
-In the workflow, we use [Chocolatey Package Manager](https://chocolatey.org/) to download gpg4win to the build agent, then use the shell to decrypt the .pfx, using the secret passphrase stored in the GitHub secrets to decrypt the file. 
+In our workflow, we add a step to decode the secret, save the .pfx to the build agent, and package the Windows Application Packaging project.
 
 ```yaml
-    # Install the Encryption tool, gpg4Win
-    - name: Install gpg4Win
-      run: choco install gpg4win
-
-    # Decrypt the .pfx with gpg4win
-    - name: Decrypt .pfx
-      run: gpg --quiet --batch --yes --decrypt --passphrase=${{secrets.Pfx_gpg_secret_passphrase}} --output MyWpfApp.Package\EdwardSkrodDeveloper.pfx MyWPFApp.Package\EdwardSkrodDeveloper.pfx.gpg
+    # Decode the Base64 encoded Pfx
+    - name: Decode the Pfx
+      run: |
+        $pfx_cert_byte = [System.Convert]::FromBase64String(${{ secrets.Base64_Encoded_Pfx }})
+        Set-Content -Path $env:Wap_Project_Directory\$env:SigningCertificate -Value $pfx_cert_byte -Encoding Byte
 ```
 
-To [add a secret to your workflow](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners#creating-and-using-secrets-encrypted-variables), navigate to Settings -> Secrets.
-
-Once the certificate is decrypted, we sign the package during the packaging step and pass the signing certificate's password to MSBuild.
+Once the certificate is decoded, we sign the package during the packaging step and pass the signing certificate's password to MSBuild.
 
 ```yaml
-    # Build the Windows Application Packaging project
-    - name: Build MyWpfApp.Package 
-      run: msbuild MyWpfApp.Package\MyWpfApp.Package.wapproj /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificatePassword=${{secrets.Pfx_Key}}
+    # Build the Windows Application Packaging project for Dev and Prod_Sideload
+    - name: Build the Wap for ${{ matrix.ChannelName }}
+      run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificateKeyFile=$env:Wap_Project_Directory/$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
+      if: ${{ matrix.ChannelName }} != Prod_Store
       env:
-        AppInstallerUri: ${{matrix.DistributionUrl}}
+        AppInstallerUri: ${{ matrix.DistributionUrl }}
         BuildMode: SideLoadOnly
-        Configuration: ${{matrix.Configuration}}
-        TargetPlatform: x86
-
+        Configuration: ${{ matrix.Configuration }}
+        GenerateAppInstallerFile: True
+        TargetPlatform: ${{ matrix.TargetPlatform }}
 ```
-
+Finally, we delete the .pfx.
+```yaml
+    # Remove the .pfx
+    - name: Remove the .pfx
+      run: Remove-Item -path $env:Wap_Project_Directory/$env:SigningCertificate
+      if: ${{ matrix.ChannelName }} != Prod_Store
+```
 
 # Contributions
 This project welcomes contributions and suggestions. Most contributions require you to agree to a Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us the rights to use your contribution. For details, visit https://cla.microsoft.com.
