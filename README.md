@@ -58,15 +58,21 @@ See [Workflow syntax for GitHub Actions](https://help.github.com/en/actions/auto
 
 Build and package the Wpf Net Core application with MsBuild and then [upload the build artifacts](https://github.com/marketplace/actions/upload-artifact) to allow developers to deploy and test the app.
 
-This CI pipeline uses the Package Identity Name defined in the Package.appxmanifest in the Windows Application Packaging project to identify the application as "MyWPFApp (Local)." By suffixing the application with "(Local)", we are able to install it side by side with other channels of the app.  Developers have the option to download the artifact to test the build or upload the artifact to a website or file share for app distribution.  
+This CI pipeline uses the Package Identity Name defined in the Package.appxmanifest in the Windows Application Packaging project to identify the application as "MyWPFApp.DevOpsDemo.Local" By suffixing the application with "Local", we are able to install it side by side with other channels of the app.  
+```xml
+  <Identity
+    Name="MyWPFApp.DevOpsDemo.Local"
+    Publisher="CN=EdwardSkrod"
+    Version="0.0.1.0" />
+```
 
-One incredibly powerful, yet simple, method of distribution is through the use of GitHub pages. To see the distribution website for the Local channel, please navigate to [edwardskrod/devops-for-windows-app-distribution-local.](https://github.com/edwardskrod/devops-for-windows-apps-distribution-local)
+Developers have the option to download the artifact to test the build or upload the artifact to a website or file share for app distribution.  
 
 ### cd.yml
 
 Build, package, and create a GitHub release for multiple channels.
 
-The continuous delivery workflow allows us to build, package and distribute our code for multiple channels such as 'Dev' and 'Prod.'   On every `push` to a [tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging) matching the pattern `*`, [create a release](https://developer.github.com/v3/repos/releases/#create-a-release) and [upload a release asset](https://developer.github.com/v3/repos/releases/#upload-a-release-asset)  
+Build, package and distribute code for multiple channels such as 'Dev' and 'Prod.'   On every `push` to a [tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging) matching the pattern `*`, [create a release](https://developer.github.com/v3/repos/releases/#create-a-release) and [upload a release asset](https://developer.github.com/v3/repos/releases/#upload-a-release-asset)  
 
 ```yaml
 on: 
@@ -76,12 +82,14 @@ on:
 ```
 
 To create a git tag, run the following commands on the branch you wish to release:
-* git tag 1.0.0.0
-* git push origin --tags
+```cmd
+git tag 1.0.0.0
+git push origin --tags
+```
 
 The above commands will add the tag "1.0.0.0" and then `push` the branch and tag to the repo. [Learn more.](https://git-scm.com/book/en/v2/Git-Basics-Tagging)
 
-In this workflow, the GitHub agent builds the Wpf Net Core application and creates a MSIX package. However, prior to building the code, the application's Identity Name, Publisher, Application DisplayName, and other elements are changed according to which channel should be built. 
+In this workflow, the GitHub agent builds the Wpf Net Core application and creates a MSIX package. However, prior to building the code, the application's Identity Name, Publisher, Application DisplayName, and other elements in the Package.appxmanifest are changed according to which channel should be built. 
 
 ```yaml
     # Update the appxmanifest before build by setting the per-channel values set in the matrix.
@@ -141,31 +149,33 @@ Once the MSIX is created for each channel, the agent archives the AppPackages fo
 Creating channels for the application is a powerful way to allow side-by-side installations of different releases.
 
 ### Signing
-Avoid submitting certificates to the repo if at all possible. Git ignores them by default. To manage the safe handling of sensitive files like certificates, we can take advantage of [GitHub secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets), which allow you to store sensitive information in the repository.
+Avoid submitting certificates to the repo if at all possible. Git ignores them by default. To manage the safe handling of sensitive files like certificates, take advantage of [GitHub secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets), which allow the storage of sensitive information in the repository.
 
-First, generate a signing certificate in the Windows Application Packaging Project or add an existing signing certificate to the project. Then, to take advantage of this feature, we use PowerShell to encode the .pfx file using Base64 encoding.
+Generate a signing certificate in the Windows Application Packaging Project or add an existing signing certificate to the project and then use PowerShell to encode the .pfx file using Base64 encoding.
+```pwsh
+$pfx_cert = Get-Content '.\EdwardSkrodDeveloper_password.pfx' -Encoding Byte
+[System.Convert]::ToBase64String($pfx_cert) | Out-File `SigningCertificate_Encoded.txt'
+```
+Copy the string from the out file, "SigningCertificate_Encoded.txt" and add it to the repo as a GitHub secret. [Add a secret to the workflow.](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners#creating-and-using-secrets-encrypted-variables)
 
-`$pfx_cert = Get-Content '.\EdwardSkrodDeveloper_password.pfx' -Encoding Byte
-[System.Convert]::ToBase64String($pfx_cert) | Out-File `SigningCertificate_Encoded.txt'`
-
-Next, we add the encoded certificate to our repo as a GitHub secret. [Add a secret to your workflow.](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners#creating-and-using-secrets-encrypted-variables)
-
-In our workflow, we add a step to decode the secret, save the .pfx to the build agent, and package the Windows Application Packaging project.
+In the workflow, add a step to decode the secret, save the .pfx to the build agent, and package the Windows Application Packaging project.
 
 ```yaml
     # Decode the Base64 encoded Pfx
     - name: Decode the Pfx
       run: |
-        $pfx_cert_byte = [System.Convert]::FromBase64String(${{ secrets.Base64_Encoded_Pfx }})
-        Set-Content -Path $env:Wap_Project_Directory\$env:SigningCertificate -Value $pfx_cert_byte -Encoding Byte
+        $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
+        $currentDirectory = Get-Location
+        $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:Wap_Project_Directory -AdditionalChildPath $env:SigningCertificate
+        [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
 ```
 
-Once the certificate is decoded, we sign the package during the packaging step and pass the signing certificate's password to MSBuild.
+Once the certificate is decoded and saved to the Windows Application Packaging Project, sign the package during packaging and pass the signing certificate's password to MSBuild.
 
 ```yaml
     # Build the Windows Application Packaging project for Dev and Prod_Sideload
     - name: Build the Wap for ${{ matrix.ChannelName }}
-      run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificateKeyFile=$env:Wap_Project_Directory/$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
+      run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
       if: ${{ matrix.ChannelName }} != Prod_Store
       env:
         AppInstallerUri: ${{ matrix.DistributionUrl }}
@@ -174,7 +184,7 @@ Once the certificate is decoded, we sign the package during the packaging step a
         GenerateAppInstallerFile: True
         TargetPlatform: ${{ matrix.TargetPlatform }}
 ```
-Finally, we delete the .pfx.
+Finally, delete the .pfx.
 ```yaml
     # Remove the .pfx
     - name: Remove the .pfx
