@@ -1,10 +1,7 @@
 name:  Wpf Continuous Delivery
 
 # Trigger on push
-on: 
-  push:
-    tags:
-      - '*'
+on: [push]
 
 jobs:
 
@@ -71,17 +68,17 @@ jobs:
     - name: Update manifest version
       run: |
         [xml]$manifest = get-content ".\$env:Wap_Project_Directory\Package.appxmanifest"
-        $manifest.Package.Identity.Name = "${{ matrix.MsixPackageId }}"
-        $manifest.Package.Identity.Publisher = "${{ matrix.MsixPublisherId }}"
-        $manifest.Package.Properties.DisplayName = "${{ matrix.MsixPackageDisplayName }}"
-        $manifest.Package.Applications.Application.VisualElements.DisplayName = "${{ matrix.MsixPackageDisplayName }}"
+        $manifest.Package.Identity.Name = "${{ matrix.channel.MsixPackageId }}"
+        $manifest.Package.Identity.Publisher = "${{ matrix.channel.MsixPublisherId }}"
+        $manifest.Package.Properties.DisplayName = "${{ matrix.channel.MsixPackageDisplayName }}"
+        $manifest.Package.Applications.Application.VisualElements.DisplayName = "${{ matrix.channel.MsixPackageDisplayName }}"
         $manifest.save(".\$env:Wap_Project_Directory\Package.appxmanifest")
 
     # Build the Wpf Net Core application
     - name: Build the Wpf app
       run: msbuild $env:Wpf_Project_Path  /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
       env:
-        Configuration: ${{ matrix.Configuration }}
+        Configuration: ${{ matrix.channel.Configuration }}
         RuntimeIdentifier: win-x86
         TargetPlatform: x86
         
@@ -92,34 +89,34 @@ jobs:
         $currentDirectory = Get-Location
         $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:Wap_Project_Directory -AdditionalChildPath $env:SigningCertificate
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
-      if: ${{ matrix.ChannelName }} != Prod_Store
+      if: ${{ matrix.channel.ChannelName }} != Prod_Store
 
     # Build the Windows Application Packaging project for Dev and Prod_Sideload
-    - name: Build the Wap for ${{ matrix.ChannelName }}
+    - name: Build the Wap for ${{ matrix.channel.ChannelName }}
       run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
-      if: ${{ matrix.ChannelName }} != Prod_Store
+      if: ${{ matrix.channel.ChannelName }} != Prod_Store
       env:
-        AppInstallerUri: ${{ matrix.DistributionUrl }}
+        AppInstallerUri: ${{ matrix.channel.DistributionUrl }}
         BuildMode: SideLoadOnly
-        Configuration: ${{ matrix.Configuration }}
+        Configuration: ${{ matrix.channel.Configuration }}
         GenerateAppInstallerFile: True
-        TargetPlatform: ${{ matrix.TargetPlatform }}
+        TargetPlatform: ${{ matrix.channel.TargetPlatform }}
 
     # Build the Windows Application Packaging project for Prod_Store
-    - name: Build the Wap for ${{ matrix.ChannelName }}
+    - name: Build the Wap for ${{ matrix.channel.ChannelName }}
       run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppxPackageSigningEnabled=$env:AppxPackageSigningEnabled
-      if: ${{ matrix.ChannelName }} == Prod_Store
+      if: ${{ matrix.channel.ChannelName }} == Prod_Store
       env:
         AppxPackageSigningEnabled: False
         BuildMode: StoreOnly
-        Configuration: ${{ matrix.Configuration }}
+        Configuration: ${{ matrix.channel.Configuration }}
         GenerateAppInstallerFile: False
-        TargetPlatform: ${{ matrix.TargetPlatform }}
+        TargetPlatform: ${{ matrix.channel.TargetPlatform }}
 
     # Remove the .pfx
     - name: Remove the .pfx
       run: Remove-Item -path $env:Wap_Project_Directory\$env:SigningCertificate
-      if: ${{ matrix.ChannelName }} != Prod_Store
+      if: ${{ matrix.channel.ChannelName }} != Prod_Store
 
     # Archive the package
     - name: Create archive
@@ -132,8 +129,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ github.ref}}.${{matrix.ChannelName}}
-        release_name:  ${{ github.ref }}.${{ matrix.ChannelName }}
+        tag_name: ${{ github.ref}}.${{matrix.channel.ChannelName}}
+        release_name:  ${{ github.ref }}.${{ matrix.channel.ChannelName }}
         draft: false
         prerelease: false
 
