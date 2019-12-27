@@ -58,7 +58,7 @@ See [Workflow syntax for GitHub Actions](https://help.github.com/en/actions/auto
 
 Build and package the Wpf Net Core application with MsBuild and then [upload the build artifacts](https://github.com/marketplace/actions/upload-artifact) to allow developers to deploy and test the app.
 
-This CI pipeline uses the Package Identity Name defined in the Package.appxmanifest in the Windows Application Packaging project to identify the application as "MyWPFApp.DevOpsDemo.Local" By suffixing the application with "Local", we are able to install it side by side with other channels of the app.  
+The CI pipeline uses the Package Identity Name defined in the Package.appxmanifest in the Windows Application Packaging project to identify the application as "MyWPFApp.DevOpsDemo.Local" By suffixing the application with "Local", we are able to install it side by side with other channels of the app.  
 ```xml
   <Identity
     Name="MyWPFApp.DevOpsDemo.Local"
@@ -103,7 +103,7 @@ In this workflow, the GitHub agent builds the Wpf Net Core application and creat
         $manifest.save(".\$env:Wap_Project_Directory\Package.appxmanifest")
 ```
  
- Channels and variables are defined in the build matrix.  In this workflow, we will build and create app packages for Dev, Prod_Sideload and Prod_Store.
+Channels and variables are defined in the build matrix and will build and create app packages for Dev, Prod_Sideload and Prod_Store.
 ```yaml
 jobs:
 
@@ -144,9 +144,18 @@ jobs:
             TargetPlatform: x86
 ```
 
+The CD pipeline uses the Package Identity Name defined in the Package.appxmanifest in the Windows Application Packaging project to identify the application as "MyWPFApp.DevOpsDemo.Dev", "MyWPFApp.DevOpsDemo.ProdSideload", and "MyWPFApp.DevOpsDemo.ProdStore" depending on which channel is being built. 
+
+```xml
+  <Identity
+    Name="MyWPFApp.DevOpsDemo.ProdSideload"
+    Publisher="CN=EdwardSkrod"
+    Version="0.0.1.0" />
+```
+
 Once the MSIX is created for each channel, the agent archives the AppPackages folder, then creates a Release with the specified git release tag.  The archive is uploaded to the release as an asset for storage or distribution.
 
-Creating channels for the application is a powerful way to allow side-by-side installations of different releases.
+Creating channels for the application is a powerful way to create multiple distributions of an application in the same CD pipeline.
 
 ### Signing
 Avoid submitting certificates to the repo if at all possible. Git ignores them by default. To manage the safe handling of sensitive files like certificates, take advantage of [GitHub secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets), which allow the storage of sensitive information in the repository.
