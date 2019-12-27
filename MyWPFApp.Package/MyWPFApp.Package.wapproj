@@ -61,7 +61,7 @@
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-    <PackageCertificateKeyFile>EdwardSkrodDeveloper.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>4F4CA2B6B8E5CE50A8C93BA373F214B7AB88E816</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -79,7 +79,6 @@
       <Properties>SelfContained=%(DesktopBridgeSelfContained);RuntimeIdentifier=%(DesktopBridgeIdentifier);PublishReadyToRun=true</Properties>
       <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
       <TrustLevel>Full</TrustLevel>
-      <PublishProfile Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">Properties\PublishProfiles\Win64.pubxml</PublishProfile>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
