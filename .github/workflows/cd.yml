@@ -58,12 +58,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: Nerdbank.GitVersioning
+    # Use Nerdbank.GitVersioning to get version: https://github.com/marketplace/actions/github-action-for-nerdbank-gitversioning
+    - name: Nerdbank.GitVersioning Get Version
       uses: aarnott/nbgv@master
 
-    - name: Echo the version
-      run: echo "NBGV_SemVer2 $env:NBGV_SemVer2"
-
+    # Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v1
       with:
@@ -77,6 +76,7 @@ jobs:
     - name: Update manifest version
       run: |
         [xml]$manifest = get-content ".\$env:Wap_Project_Directory\Package.appxmanifest"
+        $manifest.Package.Identity.Version = "$env:GitBuildVersion"
         $manifest.Package.Identity.Name = "${{ matrix.MsixPackageId }}"
         $manifest.Package.Identity.Publisher = "${{ matrix.MsixPublisherId }}"
         $manifest.Package.Properties.DisplayName = "${{ matrix.MsixPackageDisplayName }}"
