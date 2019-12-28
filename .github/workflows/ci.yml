@@ -25,6 +25,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
+    - name: Nerdbank.GitVersioning
+      uses: aarnott/nbgv@master
+      run: echo "NBGV_SemVer2 $env:NBGV_SemVer2"
+
     - name: Install .NET Core
       uses: actions/setup-dotnet@v1
       with:
