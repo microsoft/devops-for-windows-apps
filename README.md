@@ -201,6 +201,19 @@ Finally, delete the .pfx.
       if: ${{ matrix.ChannelName }} != Prod_Store
 ```
 
+### Versioning
+
+The [Nerdbank.GitVersioning GitHub Action](https://github.com/AArnott/nbgv) sets the build version based on a combination of the included version.json file, and the git ‘height’ of the version which is the number of commits in the longest path from HEAD to the commit that set the major.minor version number to the values found in the HEAD. Once the action runs, a number of environment variables are available for use.
+
+* NBGV_Version (e.g. 1.1.159.47562)
+* NBGV_SimpleVersion (e.g. 1.1.159)
+* NBGV_NuGetPackageVersion (e.g. 1.1.159-gcab9873dd7)
+* NBGV_ChocolateyPackageVersion 
+* NBGV_NpmPackageVersion
+
+See the [Nerdbank.GitVersioning](https://github.com/aarnott/nerdbank.gitversioning) package for more information.
+
+
 # Contributions
 This project welcomes contributions and suggestions. Most contributions require you to agree to a Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us the rights to use your contribution. For details, visit https://cla.microsoft.com.
 

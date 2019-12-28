@@ -58,6 +58,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
+    # Use Nerdbank.GitVersioning to set version variables: https://github.com/marketplace/actions/github-action-for-nerdbank-gitversioning
+    - name: Use Nerdbank.GitVersioning to set version variables
+      uses: aarnott/nbgv@master
+
+    # Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v1
       with:
@@ -71,6 +76,7 @@ jobs:
     - name: Update manifest version
       run: |
         [xml]$manifest = get-content ".\$env:Wap_Project_Directory\Package.appxmanifest"
+        $manifest.Package.Identity.Version = "$env:NBGV_SIMPLEVERSION.0"
         $manifest.Package.Identity.Name = "${{ matrix.MsixPackageId }}"
         $manifest.Package.Identity.Publisher = "${{ matrix.MsixPublisherId }}"
         $manifest.Package.Properties.DisplayName = "${{ matrix.MsixPackageDisplayName }}"
