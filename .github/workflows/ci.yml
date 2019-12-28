@@ -30,7 +30,7 @@ jobs:
       uses: aarnott/nbgv@master
 
     - name: Echo git version
-      run: Echo GitBuildVersion $env:GitBuildVersion
+      run: Echo NBGV_SIMPLEVERSION $env:NBGV_SIMPLEVERSION
 
     # Install the .NET Core workload
     - name: Install .NET Core
@@ -46,7 +46,7 @@ jobs:
     - name: Update manifest version
       run: |
         [xml]$manifest = get-content ".\$env:Wap_Project_Directory\Package.appxmanifest"
-        $manifest.Package.Identity.Version = "$env:GitBuildVersion"
+        $manifest.Package.Identity.Version = "$env:NBGV_SIMPLEVERSION.0"
         $manifest.save(".\$env:Wap_Project_Directory\Package.appxmanifest")
 
     # Test
