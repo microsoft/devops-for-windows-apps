@@ -83,14 +83,6 @@ jobs:
         $manifest.Package.Applications.Application.VisualElements.DisplayName = "${{ matrix.MsixPackageDisplayName }}"
         $manifest.save(".\$env:Wap_Project_Directory\Package.appxmanifest")
 
-    # Build the Wpf Net Core application
-    - name: Build the Wpf app
-      run: msbuild $env:Wpf_Project_Path  /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.Configuration }}
-        RuntimeIdentifier: win-x86
-        TargetPlatform: x86
-        
     # Decode the Base64 encoded Pfx
     - name: Decode the Pfx
       run: |
@@ -100,6 +92,14 @@ jobs:
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
       if: matrix.ChannelName != 'Prod_Store'
 
+    # Build the Wpf Net Core application
+    - name: Build the Wpf app
+      run: msbuild $env:Wpf_Project_Path  /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
+      env:
+        Configuration: ${{ matrix.Configuration }}
+        RuntimeIdentifier: win-x86
+        TargetPlatform: x86
+        
     # Build the Windows Application Packaging project for Dev and Prod_Sideload
     - name: Build the Wap for ${{ matrix.ChannelName }}
       run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
