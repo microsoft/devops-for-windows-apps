@@ -1,6 +1,6 @@
 name:  Wpf Continuous Delivery
 
-# Trigger on push
+# Trigger on any push with a git tag
 on: 
   push:
     tags:
@@ -92,12 +92,12 @@ jobs:
         $currentDirectory = Get-Location
         $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:Wap_Project_Directory -AdditionalChildPath $env:SigningCertificate
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
-      if: ${{ matrix.ChannelName }} != Prod_Store
+      if: matrix.ChannelName != 'Prod_Store'
 
     # Build the Windows Application Packaging project for Dev and Prod_Sideload
     - name: Build the Wap for ${{ matrix.ChannelName }}
       run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
-      if: ${{ matrix.ChannelName }} != Prod_Store
+      if: matrix.ChannelName != 'Prod_Store'
       env:
         AppInstallerUri: ${{ matrix.DistributionUrl }}
         BuildMode: SideLoadOnly
@@ -108,7 +108,7 @@ jobs:
     # Build the Windows Application Packaging project for Prod_Store
     - name: Build the Wap for ${{ matrix.ChannelName }}
       run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppxPackageSigningEnabled=$env:AppxPackageSigningEnabled
-      if: ${{ matrix.ChannelName }} == Prod_Store
+      if: matrix.ChannelName == 'Prod_Store'
       env:
         AppxPackageSigningEnabled: False
         BuildMode: StoreOnly
@@ -119,7 +119,7 @@ jobs:
     # Remove the .pfx
     - name: Remove the .pfx
       run: Remove-Item -path $env:Wap_Project_Directory\$env:SigningCertificate
-      if: ${{ matrix.ChannelName }} != Prod_Store
+      if: matrix.ChannelName != 'Prod_Store'
 
     # Archive the package
     - name: Create archive
