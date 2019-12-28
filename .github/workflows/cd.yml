@@ -60,6 +60,8 @@ jobs:
 
     - name: Nerdbank.GitVersioning
       uses: aarnott/nbgv@master
+
+    - name: Echo the version
       run: echo "NBGV_SemVer2 $env:NBGV_SemVer2"
 
     - name: Install .NET Core
