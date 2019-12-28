@@ -68,10 +68,10 @@ jobs:
     - name: Update manifest version
       run: |
         [xml]$manifest = get-content ".\$env:Wap_Project_Directory\Package.appxmanifest"
-        $manifest.Package.Identity.Name = "${{ matrix.channel.MsixPackageId }}"
-        $manifest.Package.Identity.Publisher = "${{ matrix.channel.MsixPublisherId }}"
-        $manifest.Package.Properties.DisplayName = "${{ matrix.channel.MsixPackageDisplayName }}"
-        $manifest.Package.Applications.Application.VisualElements.DisplayName = "${{ matrix.channel.MsixPackageDisplayName }}"
+        $manifest.Package.Identity.Name = "${{ matrix.MsixPackageId }}"
+        $manifest.Package.Identity.Publisher = "${{ matrix.MsixPublisherId }}"
+        $manifest.Package.Properties.DisplayName = "${{ matrix.MsixPackageDisplayName }}"
+        $manifest.Package.Applications.Application.VisualElements.DisplayName = "${{ matrix.MsixPackageDisplayName }}"
         $manifest.save(".\$env:Wap_Project_Directory\Package.appxmanifest")
 
     # Build the Wpf Net Core application
