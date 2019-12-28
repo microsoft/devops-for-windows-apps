@@ -25,12 +25,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
-    # Use Nerdbank.GitVersioning to get version: https://github.com/marketplace/actions/github-action-for-nerdbank-gitversioning
-    - name: Nerdbank.GitVersioning Get Version
+    # Use Nerdbank.GitVersioning to set version variables: https://github.com/marketplace/actions/github-action-for-nerdbank-gitversioning
+    - name: Use Nerdbank.GitVersioning to set version variables
       uses: aarnott/nbgv@master
-
-    - name: Echo git version
-      run: Echo NBGV_SIMPLEVERSION $env:NBGV_SIMPLEVERSION
 
     # Install the .NET Core workload
     - name: Install .NET Core
