@@ -30,7 +30,7 @@ jobs:
       uses: aarnott/nbgv@master
 
     - name: Echo git version
-      run: Echo GitBuildVersion: $env:GitBuildVersion
+      run: Echo GitBuildVersion $env:GitBuildVersion
 
     # Install the .NET Core workload
     - name: Install .NET Core
