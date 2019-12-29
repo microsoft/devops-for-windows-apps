@@ -5,9 +5,13 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>win.ico</ApplicationIcon>
-    <Platforms>AnyCPU;x86</Platforms>
+    <Platforms>x86</Platforms>
     <RuntimeIdentifiers>win-x86</RuntimeIdentifiers>
     <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>

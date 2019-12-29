@@ -62,21 +62,29 @@ jobs:
         $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:Wap_Project_Directory -AdditionalChildPath $env:SigningCertificate
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
 
-    # Build the Wpf Net Core application
-    - name: Build the Wpf App
-      run: msbuild $env:Wpf_Project_Path /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
-      env:
-        Configuration: Release
-        RuntimeIdentifier: win-${{ matrix.targetplatform }}
-        TargetPlatform: ${{ matrix.targetplatform }}
-        
-    # Build the Windows Application Packaging project
-    - name: Build the Wap 
-      run: msbuild $env:Wap_Project_Directory\$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
+    # Package the Wpf Net Core application
+    - name: Package the Wpf App 
+      run: msbuild Solution_Path /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
       env:  
         BuildMode: SideLoadOnly
         Configuration: Release
         TargetPlatform: ${{ matrix.targetplatform }}
+
+    # Build the Wpf Net Core application
+    #- name: Build the Wpf App
+    #  run: msbuild $env:Wpf_Project_Path /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
+    #  env:
+    #    Configuration: Release
+    #    RuntimeIdentifier: win-${{ matrix.targetplatform }}
+    #    TargetPlatform: ${{ matrix.targetplatform }}
+        
+    # Build the Windows Application Packaging project
+    #- name: Build the Wap 
+    #  run: msbuild $env:Wap_Project_Directory\$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
+    #  env:  
+    #    BuildMode: SideLoadOnly
+    #    Configuration: Release
+    #    TargetPlatform: ${{ matrix.targetplatform }}
 
     # Remove the .pfx
     - name: Remove the .pfx
