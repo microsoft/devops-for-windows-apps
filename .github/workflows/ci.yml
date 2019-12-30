@@ -14,7 +14,7 @@ jobs:
     runs-on: windows-latest
 
     env:
-      SigningCertificate: EdwardSkrodDeveloper.pfx
+      SigningCertificate: GitHubActionsDemo.pfx
       Solution_Path: MyWpfApp.sln
       Test_Project_Path: MyWpfApp.Tests\MyWpfApp.Tests.csproj
       Wpf_Project_Path: MyWpfApp\MyWpfApp.csproj
@@ -59,7 +59,7 @@ jobs:
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
 
     # Build the Windows Application Packaging project
-    - name: Build the Wap 
+    - name: Build the Windows Application Packaging Project (wapproj) 
       run: msbuild $env:Wap_Project_Directory\$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
       env:  
         BuildMode: SideLoadOnly

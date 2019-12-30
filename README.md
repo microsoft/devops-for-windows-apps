@@ -1,11 +1,10 @@
-# DevOps for Windows Desktop Apps using GitHub Actions
+# DevOps for Windows Desktop Apps Using GitHub Actions
 
-### Create a CI/CD pipeline for a Wpf app built on Net Core
+### Create a CI/CD pipeline for a Windows Presentation Foundation (WPF) application built on .Net Core 3.x
 
-This repo contains a sample application to demonstrate how to create a CI/CD pipeline for a Wpf application built on Net Core and packaged with MSIX using GitHub Actions. 
+This repo contains a sample application to demonstrate how to create a CI/CD pipeline for a WPF application built on .Net Core 3.x and packaged with MSIX using GitHub Actions. 
 
-With GitHub Actions, you can automate your software workflows.  You can build, test, and deploy your code within GitHub.  Documentation for GitHub Actions can be found here: https://github.com/features/actions
-
+With GitHub Actions, you can automate your software workflows.  You can build, test, and deploy your code within GitHub.  Documentation for GitHub Actions can be found [here](https://github.com/features/actions).
 
 ![](https://github.com/edwardskrod/devops-for-windows-apps/workflows/Wpf%20Continuous%20Integration/badge.svg)
 
@@ -14,14 +13,12 @@ With GitHub Actions, you can automate your software workflows.  You can build, t
 ## Workflows
 
 Workflows are defined in YAML files in the .github/workflows folder.  In this project, we have two workflow definitions:
-* ci.yml
-* cd.yml
+* **ci.yml:** This file defines the steps for our Continuous Integration pipeline.
+* **cd.yml:** This file defines the steps for our Continuous Delivery pipeline.
 
-### ci.yml
+### ci.yml: Build, test, package, and save the package artifacts.
 
-Build, test, package, and save package artifacts.
-
-On every `push` to the repo, [Install .NET Core](https://github.com/actions/setup-dotnet), add [MsBuild](https://github.com/topics/msbuild-action) to the PATH, and execute unit tests.
+On every `push` to the repo, [Install .NET Core](https://github.com/actions/setup-dotnet), add [MSBuild](https://github.com/topics/msbuild-action) to the PATH, and execute unit tests.
 
 ```yaml
     - name: Install .NET Core
@@ -38,7 +35,8 @@ On every `push` to the repo, [Install .NET Core](https://github.com/actions/setu
       run: dotnet test $env:Test_Project_Path
 ```
 
-Target multiple platforms by authoring the workflow to define a build matrix, a set of different configurations of the runner environment. Define [environment variables](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/using-environment-variables) for use by the workflow.   
+Target multiple platforms by authoring the workflow to define a Build Matrix, a set of different configurations for the runner environment. Define [environment variables](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/using-environment-variables) for use by the workflow. 
+
 ```yaml
     strategy:
       matrix:
@@ -47,32 +45,32 @@ Target multiple platforms by authoring the workflow to define a build matrix, a 
     runs-on: windows-latest
 
     env:
-      SigningCertificate: EdwardSkrodDeveloper.pfx
+      SigningCertificate: GitHubActionsDemo.pfx
       Solution_Path: MyWpfApp.sln
       Test_Project_Path: MyWpfApp.Tests\MyWpfApp.Tests.csproj
       Wpf_Project_Path: MyWpfApp\MyWpfApp.csproj
       Wap_Project_Directory: MyWpfApp.Package
       Wap_Project_Name: MyWpfApp.Package.wapproj
 ```
-See [Workflow syntax for GitHub Actions](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions) for more information.
 
-Build and package the Wpf Net Core application with MsBuild and then [upload the build artifacts](https://github.com/marketplace/actions/upload-artifact) to allow developers to deploy and test the app.
+See the article ["Workflow Syntax for GitHub Actions"](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions) for more information.
 
-The CI pipeline uses the Package Identity Name defined in the Package.appxmanifest in the Windows Application Packaging project to identify the application as "MyWPFApp.DevOpsDemo.Local" By suffixing the application with "Local", we are able to install it side by side with other channels of the app.  
+Build and package the WPF .Net Core application with MSBuild and then [upload the build artifacts](https://github.com/marketplace/actions/upload-artifact) to deploy and test your application.
+
+The CI pipeline uses the Package Identity Name defined in the Package.appxmanifest in the Windows Application Packaging project to identify the application as "MyWPFApp.DevOpsDemo.Local" By suffixing the application with ".Local," we are able to install it side by side with other channels of the app.
+
 ```xml
   <Identity
     Name="MyWPFApp.DevOpsDemo.Local"
-    Publisher="CN=EdwardSkrod"
+    Publisher="CN=GitHubActionsDemo"
     Version="0.0.1.0" />
 ```
 
 Developers have the option to download the artifact to test the build or upload the artifact to a website or file share for app distribution.  
 
-### cd.yml
+### cd.yml: Build, package, and create a GitHub release for multiple channels
 
-Build, package, and create a GitHub release for multiple channels.
-
-Build, package and distribute code for multiple channels such as 'Dev' and 'Prod.'   On every `push` to a [tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging) matching the pattern `*`, [create a release](https://developer.github.com/v3/repos/releases/#create-a-release) and [upload a release asset](https://developer.github.com/v3/repos/releases/#upload-a-release-asset)  
+Build, package and distribute code for multiple channels such as 'Dev' and 'Prod.'   On every `push` to a [tag](https://git-scm.com/book/en/v2/Git-Basics-Tagging) matching the pattern `*`, [create a release](https://developer.github.com/v3/repos/releases/#create-a-release) and [upload a release asset](https://developer.github.com/v3/repos/releases/#upload-a-release-asset).
 
 ```yaml
 on: 
@@ -81,7 +79,7 @@ on:
       - '*'
 ```
 
-To create a git tag, run the following commands on the branch you wish to release:
+To create a git `tag`, run the following commands on the branch you wish to release:
 ```cmd
 git tag 1.0.0.0
 git push origin --tags
@@ -89,7 +87,7 @@ git push origin --tags
 
 The above commands will add the tag "1.0.0.0" and then `push` the branch and tag to the repo. [Learn more.](https://git-scm.com/book/en/v2/Git-Basics-Tagging)
 
-In this workflow, the GitHub agent builds the Wpf Net Core application and creates a MSIX package. However, prior to building the code, the application's Identity Name, Publisher, Application DisplayName, and other elements in the Package.appxmanifest are changed according to which channel should be built. 
+In this workflow, the GitHub agent builds the WPF .Net Core application and creates a MSIX package. Prior to building the code, the application's Identity Name, Publisher, Application DisplayName, and other elements in the Package.appxmanifest are changed according to which channel should be built. 
 
 ```yaml
     # Update the appxmanifest before build by setting the per-channel values set in the matrix.
@@ -103,7 +101,10 @@ In this workflow, the GitHub agent builds the Wpf Net Core application and creat
         $manifest.save(".\$env:Wap_Project_Directory\Package.appxmanifest")
 ```
  
-Channels and variables are defined in the build matrix and will build and create app packages for Dev, Prod_Sideload and Prod_Store.
+Channels and variables are defined in the Build Matrix and will build and create app packages for Dev, Prod_Sideload and Prod_Store.
+
+**TODO**
+[ ] Change personal url to organization URL
 ```yaml
 jobs:
 
@@ -119,7 +120,7 @@ jobs:
             Configuration: Debug
             DistributionUrl: https://edwardskrod.github.io/devops-for-windows-apps-distribution-dev
             MsixPackageId: MyWPFApp.DevOpsDemo.Dev
-            MsixPublisherId: CN=EdwardSkrod
+            MsixPublisherId: CN=GitHubActionsDemo
             MsixPackageDisplayName: MyWPFApp (Dev)
             TargetPlatform: x86
 
@@ -129,7 +130,7 @@ jobs:
             ChannelName: Prod_Sideload
             DistributionUrl: https://edwardskrod.github.io/devops-for-windows-apps-distribution-prod
             MsixPackageId: MyWPFApp.DevOpsDemo.ProdSideload
-            MsixPublisherId: CN=EdwardSkrod
+            MsixPublisherId: CN=GitHubActionsDemo
             MsixPackageDisplayName: MyWPFApp (ProdSideload)
             TargetPlatform: x86
 
@@ -139,35 +140,37 @@ jobs:
             ChannelName: Prod_Store
             DistributionUrl: 
             MsixPackageId: MyWPFApp.DevOpsDemo.ProdStore
-            MsixPublisherId: CN=EdwardSkrod
+            MsixPublisherId: CN=GitHubActionsDemo
             MsixPackageDisplayName: MyWPFApp (ProdStore)
             TargetPlatform: x86
 ```
 
-The CD pipeline uses the Package Identity Name defined in the Package.appxmanifest in the Windows Application Packaging project to identify the application as "MyWPFApp.DevOpsDemo.Dev", "MyWPFApp.DevOpsDemo.ProdSideload", and "MyWPFApp.DevOpsDemo.ProdStore" depending on which channel is being built. 
+The CD pipeline uses the Package Identity Name defined in the Package.appxmanifest in the Windows Application Packaging project to identify the application as *MyWPFApp.DevOpsDemo.Dev*, *MyWPFApp.DevOpsDemo.ProdSideload*, and *MyWPFApp.DevOpsDemo.ProdStore* depending on which channel is being built.
 
 ```xml
   <Identity
     Name="MyWPFApp.DevOpsDemo.ProdSideload"
-    Publisher="CN=EdwardSkrod"
+    Publisher="CN=GitHubActionsDemo"
     Version="0.0.1.0" />
 ```
 
-Once the MSIX is created for each channel, the agent archives the AppPackages folder, then creates a Release with the specified git release tag.  The archive is uploaded to the release as an asset for storage or distribution.
+Once the MSIX is created for each channel, the agent archives the AppPackages folder then creates a Release with the specified git release tag.  The archive is uploaded to the release as an asset for storage or distribution.
 
 Creating channels for the application is a powerful way to create multiple distributions of an application in the same CD pipeline.
 
 ### Signing
-Avoid submitting certificates to the repo if at all possible. Git ignores them by default. To manage the safe handling of sensitive files like certificates, take advantage of [GitHub secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets), which allow the storage of sensitive information in the repository.
+Avoid submitting certificates to the repo if at all possible. (Git ignores them by default.) To manage the safe handling of sensitive files like certificates, take advantage of [GitHub secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets), which allow the storage of sensitive information in the repository.
 
 Generate a signing certificate in the Windows Application Packaging Project or add an existing signing certificate to the project and then use PowerShell to encode the .pfx file using Base64 encoding.
+
 ```pwsh
-$pfx_cert = Get-Content '.\EdwardSkrodDeveloper_password.pfx' -Encoding Byte
+$pfx_cert = Get-Content '.\GitHubActionsDemo_password.pfx' -Encoding Byte
 [System.Convert]::ToBase64String($pfx_cert) | Out-File `SigningCertificate_Encoded.txt'
 ```
-Copy the string from the out file, "SigningCertificate_Encoded.txt" and add it to the repo as a GitHub secret. [Add a secret to the workflow.](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners#creating-and-using-secrets-encrypted-variables)
 
-In the workflow, add a step to decode the secret, save the .pfx to the build agent, and package the Windows Application Packaging project.
+Copy the string from the output file, *SigningCertificate_Encoded.txt*, and add it to the repo as a GitHub secret. [Add a secret to the workflow.](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners#creating-and-using-secrets-encrypted-variables)
+
+In the workflow, add a step to decode the secret, save the .pfx to the build agent, and package your application with the Windows Application Packaging project.
 
 ```yaml
     # Decode the Base64 encoded Pfx
@@ -183,7 +186,7 @@ Once the certificate is decoded and saved to the Windows Application Packaging P
 
 ```yaml
     # Build the Windows Application Packaging project for Dev and Prod_Sideload
-    - name: Build the Wap for ${{ matrix.ChannelName }}
+    - name: Build the Windows Application Packaging Project (wapproj) for ${{ matrix.ChannelName }}
       run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
       if: ${{ matrix.ChannelName }} != Prod_Store
       env:
@@ -193,7 +196,9 @@ Once the certificate is decoded and saved to the Windows Application Packaging P
         GenerateAppInstallerFile: True
         TargetPlatform: ${{ matrix.TargetPlatform }}
 ```
+
 Finally, delete the .pfx.
+
 ```yaml
     # Remove the .pfx
     - name: Remove the .pfx
