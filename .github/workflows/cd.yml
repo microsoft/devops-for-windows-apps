@@ -22,6 +22,7 @@ jobs:
             MsixPackageId: MyWPFApp.DevOpsDemo.Dev
             MsixPublisherId: CN=EdwardSkrod
             MsixPackageDisplayName: MyWPFApp (Dev)
+            RuntimeIdentifier: win-x86
             TargetPlatform: x86
 
           # includes the following variables for the matrix leg matching Prod_Sideload
@@ -32,6 +33,7 @@ jobs:
             MsixPackageId: MyWPFApp.DevOpsDemo.ProdSideload
             MsixPublisherId: CN=EdwardSkrod
             MsixPackageDisplayName: MyWPFApp (ProdSideload)
+            RuntimeIdentifier: win-x86
             TargetPlatform: x86
 
           # includes the following variables for the matrix leg matching Prod_Store
@@ -42,6 +44,7 @@ jobs:
             MsixPackageId: MyWPFApp.DevOpsDemo.ProdStore
             MsixPublisherId: CN=EdwardSkrod
             MsixPackageDisplayName: MyWPFApp (ProdStore)
+            RuntimeIdentifier: win-x86
             TargetPlatform: x86
 
     runs-on: windows-latest
@@ -92,35 +95,29 @@ jobs:
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
       if: matrix.ChannelName != 'Prod_Store'
 
-    # Build the Wpf Net Core application
-    - name: Build the Wpf app
-      run: msbuild $env:Wpf_Project_Path  /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.Configuration }}
-        RuntimeIdentifier: win-x86
-        TargetPlatform: x86
-        
-    # Build the Windows Application Packaging project for Dev and Prod_Sideload
-    - name: Build the Wap for ${{ matrix.ChannelName }}
-      run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
+    # Package the Wpf Net Core application for SideLoadOnly
+    - name: Package the Wpf App 
+      run: msbuild $env:Solution_Path /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
       if: matrix.ChannelName != 'Prod_Store'
       env:
-        AppInstallerUri: ${{ matrix.DistributionUrl }}
+        AppxBundle: Never
+        AppInstallerUri: ${{ matrix.DistributionUrl }}      
         BuildMode: SideLoadOnly
         Configuration: ${{ matrix.Configuration }}
         GenerateAppInstallerFile: True
-        TargetPlatform: ${{ matrix.TargetPlatform }}
-
-    # Build the Windows Application Packaging project for Prod_Store
-    - name: Build the Wap for ${{ matrix.ChannelName }}
-      run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppxPackageSigningEnabled=$env:AppxPackageSigningEnabled
+        TargetPlatform: ${{ matrix.targetplatform }}
+        
+    # Package the Wpf Net Core application for StoreOnly
+    - name: Package the Wpf App 
+      run: msbuild $env:Solution_Path /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppxPackageSigningEnabled=$env:AppxPackageSigningEnabled
       if: matrix.ChannelName == 'Prod_Store'
       env:
+        AppxBundle: Never
         AppxPackageSigningEnabled: False
         BuildMode: StoreOnly
         Configuration: ${{ matrix.Configuration }}
         GenerateAppInstallerFile: False
-        TargetPlatform: ${{ matrix.TargetPlatform }}
+        TargetPlatform: ${{ matrix.targetplatform }}
 
     # Remove the .pfx
     - name: Remove the .pfx

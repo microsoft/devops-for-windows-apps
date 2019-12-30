@@ -56,7 +56,19 @@ Target multiple platforms by authoring the workflow to define a build matrix, a 
 ```
 See [Workflow syntax for GitHub Actions](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions) for more information.
 
-Build and package the Wpf Net Core application with MsBuild and then [upload the build artifacts](https://github.com/marketplace/actions/upload-artifact) to allow developers to deploy and test the app.
+Build and package the Wpf Net Core application with MsBuild.
+```yaml
+    # Package the Wpf Net Core application
+    - name: Package the Wpf App 
+      run: msbuild $env:Solution_Path /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
+      env:
+        AppxBundle: Never
+        BuildMode: SideLoadOnly
+        Configuration: Release
+        TargetPlatform: ${{ matrix.targetplatform }}
+```
+
+[Upload the build artifacts](https://github.com/marketplace/actions/upload-artifact) to allow developers to deploy and test the app.
 
 The CI pipeline uses the Package Identity Name defined in the Package.appxmanifest in the Windows Application Packaging project to identify the application as "MyWPFApp.DevOpsDemo.Local" By suffixing the application with "Local", we are able to install it side by side with other channels of the app.  
 ```xml
@@ -121,6 +133,7 @@ jobs:
             MsixPackageId: MyWPFApp.DevOpsDemo.Dev
             MsixPublisherId: CN=EdwardSkrod
             MsixPackageDisplayName: MyWPFApp (Dev)
+            RuntimeIdentifier: win-x86
             TargetPlatform: x86
 
           # includes the following variables for the matrix leg matching Prod_Sideload
@@ -131,6 +144,7 @@ jobs:
             MsixPackageId: MyWPFApp.DevOpsDemo.ProdSideload
             MsixPublisherId: CN=EdwardSkrod
             MsixPackageDisplayName: MyWPFApp (ProdSideload)
+            RuntimeIdentifier: win-x86
             TargetPlatform: x86
 
           # includes the following variables for the matrix leg matching Prod_Store
@@ -141,6 +155,7 @@ jobs:
             MsixPackageId: MyWPFApp.DevOpsDemo.ProdStore
             MsixPublisherId: CN=EdwardSkrod
             MsixPackageDisplayName: MyWPFApp (ProdStore)
+            RuntimeIdentifier: win-x86
             TargetPlatform: x86
 ```
 
