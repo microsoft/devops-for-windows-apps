@@ -95,35 +95,27 @@ jobs:
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
       if: matrix.ChannelName != 'Prod_Store'
 
-    # Build the Wpf Net Core application
-    - name: Build the Wpf app
-      run: msbuild $env:Wpf_Project_Path  /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.Configuration }}
-        RuntimeIdentifier: ${{ matrix.RuntimeIdentifier }}
-        TargetPlatform: ${{ matrix.TargetPlatform }}
-        
-    # Build the Windows Application Packaging project for Dev and Prod_Sideload
-    - name: Build the Wap for ${{ matrix.ChannelName }}
-      run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppInstallerUri=$env:AppInstallerUri /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
+    # Package the Wpf Net Core application for SideLoadOnly
+    - name: Package the Wpf App 
+      run: msbuild $env:Solution_Path /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
       if: matrix.ChannelName != 'Prod_Store'
       env:
-        AppInstallerUri: ${{ matrix.DistributionUrl }}
+        AppInstallerUri: ${{ matrix.DistributionUrl }}      
         BuildMode: SideLoadOnly
         Configuration: ${{ matrix.Configuration }}
         GenerateAppInstallerFile: True
-        TargetPlatform: ${{ matrix.TargetPlatform }}
-
-    # Build the Windows Application Packaging project for Prod_Store
-    - name: Build the Wap for ${{ matrix.ChannelName }}
-      run: msbuild $env:Wap_Project_Directory/$env:Wap_Project_Name /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppxPackageSigningEnabled=$env:AppxPackageSigningEnabled
+        TargetPlatform: ${{ matrix.targetplatform }}
+        
+    # Package the Wpf Net Core application for StoreOnly
+    - name: Package the Wpf App 
+      run: msbuild $env:Solution_Path /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:UapAppxPackageBuildMode=$env:BuildMode /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppxPackageSigningEnabled=$env:AppxPackageSigningEnabled
       if: matrix.ChannelName == 'Prod_Store'
       env:
         AppxPackageSigningEnabled: False
         BuildMode: StoreOnly
         Configuration: ${{ matrix.Configuration }}
         GenerateAppInstallerFile: False
-        TargetPlatform: ${{ matrix.TargetPlatform }}
+        TargetPlatform: ${{ matrix.targetplatform }}
 
     # Remove the .pfx
     - name: Remove the .pfx
