@@ -14,24 +14,28 @@ jobs:
       matrix:
         channel: [Dev, Prod_Sideload, Prod_Store]
         include:
+          # TODO
+          # Change personal URL to organization URL
           # includes the following variables for the matrix leg matching Dev
           - channel: Dev
             ChannelName: Dev
             Configuration: Debug
             DistributionUrl: https://edwardskrod.github.io/devops-for-windows-apps-distribution-dev
             MsixPackageId: MyWPFApp.DevOpsDemo.Dev
-            MsixPublisherId: CN=EdwardSkrod
+            MsixPublisherId: CN=GitHubActionsDemo
             MsixPackageDisplayName: MyWPFApp (Dev)
             RuntimeIdentifier: win-x86
             TargetPlatform: x86
 
+          # TODO
+          # Change personal URL to organization URL
           # includes the following variables for the matrix leg matching Prod_Sideload
           - channel: Prod_Sideload
             Configuration: Release
             ChannelName: Prod_Sideload
             DistributionUrl: https://edwardskrod.github.io/devops-for-windows-apps-distribution-prod
             MsixPackageId: MyWPFApp.DevOpsDemo.ProdSideload
-            MsixPublisherId: CN=EdwardSkrod
+            MsixPublisherId: CN=GitHubActionsDemo
             MsixPackageDisplayName: MyWPFApp (ProdSideload)
             RuntimeIdentifier: win-x86
             TargetPlatform: x86
@@ -42,7 +46,7 @@ jobs:
             ChannelName: Prod_Store
             DistributionUrl: 
             MsixPackageId: MyWPFApp.DevOpsDemo.ProdStore
-            MsixPublisherId: CN=EdwardSkrod
+            MsixPublisherId: CN=GitHubActionsDemo
             MsixPackageDisplayName: MyWPFApp (ProdStore)
             RuntimeIdentifier: win-x86
             TargetPlatform: x86
@@ -50,7 +54,7 @@ jobs:
     runs-on: windows-latest
 
     env:
-      SigningCertificate: EdwardSkrodDeveloper.pfx
+      SigningCertificate: GitHubActionsDemo.pfx
       Solution_Path: MyWpfApp.sln
       Test_Project_Path: MyWpfApp.Tests\MyWpfApp.Tests.csproj
       Wpf_Project_Path: MyWpfApp\MyWpfApp.csproj
@@ -95,10 +99,10 @@ jobs:
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
       if: matrix.ChannelName != 'Prod_Store'
 
-    # Package the Wpf Net Core application for SideLoadOnly
-    - name: Package the Wpf App 
       run: msbuild $env:Solution_Path /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
       if: matrix.ChannelName != 'Prod_Store'
+    # Build the Windows Application Packaging project for Dev and Prod_Sideload
+    - name: Build the Windows Application Packaging Project (wapproj) for ${{ matrix.ChannelName }}
       env:
         AppxBundle: Never
         AppInstallerUri: ${{ matrix.DistributionUrl }}      
@@ -107,10 +111,10 @@ jobs:
         GenerateAppInstallerFile: True
         TargetPlatform: ${{ matrix.targetplatform }}
         
-    # Package the Wpf Net Core application for StoreOnly
-    - name: Package the Wpf App 
       run: msbuild $env:Solution_Path /restore /p:RuntimeIdentifier=$env:RuntimeIdentifier /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle /p:GenerateAppInstallerFile=$env:GenerateAppInstallerFile /p:AppxPackageSigningEnabled=$env:AppxPackageSigningEnabled
       if: matrix.ChannelName == 'Prod_Store'
+    # Build the Windows Application Packaging project for Prod_Store
+    - name: Build the Windows Application Packaging Project (wapproj) for ${{ matrix.ChannelName }}
       env:
         AppxBundle: Never
         AppxPackageSigningEnabled: False
